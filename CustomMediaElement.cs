@@ -165,6 +165,8 @@ namespace FolderMediaPlayer
             this.MediaOpened += new RoutedEventHandler(MediaElement_MediaOpened);
             this.MediaEnded += new RoutedEventHandler(MediaElement_MediaEnded);
             this.MediaFailed += new EventHandler<ExceptionRoutedEventArgs>(MediaElement_MediaFailed);
+            this.VisualBitmapScalingMode = BitmapScalingMode.NearestNeighbor;
+            this.CacheMode = new BitmapCache();
         }
     }
 

@@ -22,6 +22,7 @@
         <local:InputKeyConverter x:Key="KeyToStringConverter"/>
         <local:EnumToStringConverter x:Key="EnumStringConverter"/>
         <local:PercentageConverter x:Key="PercentageConverter"/>
+        <local:TranslateConverter x:Key="TranslateConverter"/>
 
         <Geometry x:Key="geometryCross">
             M 0, 0.5 L 19.5, 20 L 0, 39.5 L 0.5, 40 L 20, 20.5 L 39.5, 40 L 40, 39.5 L 20.5, 20 L 40, 0.5 L 39.5, 0 L 20, 19.5 L 0.5, 0 Z
@@ -162,6 +163,8 @@
                                 ConverterParameter=Nothing}"
                                 Content="{DynamicResource stringNoResizing}"/>
                         <DockPanel>
+                            <TextBlock DockPanel.Dock="Right"
+                                Text="%"/>
                             <TextBox DockPanel.Dock="Right"
                                 Text="{Binding AdjustVideoSizeScaling,
                                 Mode=TwoWay,
@@ -174,6 +177,8 @@
                                 Content="{DynamicResource stringAdjustToTheVideoSize}"/>
                         </DockPanel>
                         <DockPanel>
+                            <TextBlock DockPanel.Dock="Right"
+                                Text="%"/>
                             <TextBox DockPanel.Dock="Right"
                                 Text="{Binding FitToScreenSizeScaling,
                                 Mode=TwoWay,
@@ -335,7 +340,8 @@
                             />
                         <DataGridTextColumn
                             Header="{DynamicResource stringCommand}"
-                            Binding="{Binding name}"
+                            Binding="{local:CultureAwareBinding Path=name,
+                                Converter={StaticResource TranslateConverter}}"
                             ElementStyle="{StaticResource keyEntryColumnStyle}"
                             IsReadOnly="True"
                             Width="*"/>
@@ -437,6 +443,7 @@
             </Grid>
         </GroupBox>
 
+        <!-- Mouse Setting -->
         <GroupBox Grid.Column="1"
             Style="{StaticResource OptionPanel}"
             Visibility="{Binding IsSelected,

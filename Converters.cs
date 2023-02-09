@@ -11,6 +11,14 @@ using System.Diagnostics;
 
 namespace FolderMediaPlayer
 {
+    public class CultureAwareBinding : Binding
+    {
+        public CultureAwareBinding()
+        {
+            ConverterCulture = CultureInfo.CurrentUICulture;
+        }
+    }
+
     [ValueConversion(typeof(Enum), typeof(bool))]
     public class EnumToBooleanConverter : IValueConverter
     {
@@ -198,6 +206,40 @@ namespace FolderMediaPlayer
             }
 
             return (Enum)backValue;
+        }
+    }
+
+    [ValueConversion(typeof(String), typeof(String))]
+    public class TranslateConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || value.ToString() == String.Empty)
+                return Binding.DoNothing;
+
+            Debug.WriteLine("Translater culture : {0}", culture.Name);
+
+            string translatedValue = String.Empty;
+            try
+            {
+                translatedValue = Properties.Resources.ResourceManager.GetString(value.ToString(), culture);
+            }
+            catch
+            { }
+            
+            if (translatedValue != String.Empty)
+            {
+                return translatedValue;
+            }
+            else
+            {
+                return value.ToString();
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return Binding.DoNothing;
         }
     }
 }

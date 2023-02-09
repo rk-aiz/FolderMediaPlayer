@@ -13,7 +13,7 @@ namespace FolderMediaPlayer
         public const Int32 MONITOR_DEFAULTTOPRIMERTY = 0x00000001;
         public const Int32 MONITOR_DEFAULTTONEAREST = 0x00000002;
 
-        public static double DpiScaleX = 1.0;
+        /*public static double DpiScaleX = 1.0;
         public static double DpiScaleY = 1.0;
 
         public static void AcquireDpiScaling(Visual visual)
@@ -25,7 +25,7 @@ namespace FolderMediaPlayer
                 DpiScaleX = source.CompositionTarget.TransformToDevice.M11;
                 DpiScaleY = source.CompositionTarget.TransformToDevice.M22;
             }
-        }
+        }*/
 
         public static Size GetScreenArea()
         {
