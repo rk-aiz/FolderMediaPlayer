@@ -1,0 +1,60 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="stringSpeedRatio">Playback Speed Ratio</sys:String>
+    <sys:String x:Key="stringNoChange">No Change</sys:String>
+    <sys:String x:Key="stringJumpLargeStep">Jump large step</sys:String>
+    <sys:String x:Key="stringJumpMediumStep">Jump medium step</sys:String>
+    <sys:String x:Key="stringJumpSmallStep">Jump small step</sys:String>
+    <sys:String x:Key="stringSpeedControl">Speed Control</sys:String>
+    <sys:String x:Key="stringVolumeControl">Volume Control</sys:String>
+    <sys:String x:Key="stringMouseWheel">Mouse Wheel</sys:String>
+    <sys:String x:Key="stringNewItem">New Item</sys:String>
+    <sys:String x:Key="stringResetAll">Reset All</sys:String>
+    <sys:String x:Key="stringReset">Reset</sys:String>
+    <sys:String x:Key="stringChange">Change</sys:String>
+    <sys:String x:Key="stringIndex">Index</sys:String>
+    <sys:String x:Key="stringModifierKeys">Modifier Keys</sys:String>
+    <sys:String x:Key="stringKey">Key</sys:String>
+    <sys:String x:Key="stringCommand">Command</sys:String>
+    <sys:String x:Key="stringDescription">Description</sys:String>
+    <sys:String x:Key="stringFileName">File Name</sys:String>
+    <sys:String x:Key="stringNLoop"
+        >n times loop playback of all media in a folder</sys:String>
+    <sys:String x:Key="stringNextMedia">Play the next media</sys:String>
+    <sys:String x:Key="stringSingleRepeat">Single File Repeat</sys:String>
+    <sys:String x:Key="stringStop">Stop</sys:String>
+    <sys:String x:Key="stringBehaviorAfterPlaybackIsFinished"
+        >Behavior after playback is finished</sys:String>
+    <sys:String x:Key="stringPlaybackTime">Playback Time</sys:String>
+    <sys:String x:Key="stringPlayback">Playback</sys:String>
+    <sys:String x:Key="stringVolumeWhenStartPlayback">Volume when starting media playback</sys:String>
+    <sys:String x:Key="stringVolume">Volume</sys:String>
+    <sys:String x:Key="stringFitToTheScreenSize">Fit to the screen size</sys:String>
+    <sys:String x:Key="stringRestoreTheWindowPositionAtExit">Restore the window position at exit</sys:String>
+    <sys:String x:Key="stringAdjustToTheVideoSize">Adjust to the video size</sys:String>
+    <sys:String x:Key="stringNoResizing">No Resizing</sys:String>
+    <sys:String x:Key="stringResizeModeWhenPlayingVideo">Resize mode when playing video</sys:String>
+    <sys:String x:Key="stringSpecifiedWindowSize">Specified window size</sys:String>
+    <sys:String x:Key="stringSpecifiedVolume">Specified volume</sys:String>
+    <sys:String x:Key="stringMemorizedWindowSizeAtExit">Memorized window size at exit</sys:String>
+    <sys:String x:Key="stringDefaultWindowSize">Default window size</sys:String>
+    <sys:String x:Key="stringFixWindowAspectRatio">Fix window aspect ratio on resize</sys:String>
+    <sys:String x:Key="stringWindowSizeAtStartup">Window size at startup</sys:String>
+    <sys:String x:Key="stringMouse">Mouse</sys:String>
+    <sys:String x:Key="stringKeyboard">Keyboard</sys:String>
+    <sys:String x:Key="stringPlayer">Player</sys:String>
+    <sys:String x:Key="stringWindow">Window</sys:String>
+    <sys:String x:Key="stringWindowSize">Window Size</sys:String>
+    <sys:String x:Key="stringOSD">OSD</sys:String>
+    <sys:String x:Key="stringOption">Option</sys:String>
+    <sys:String x:Key="stringRestore">Restore</sys:String>
+    <sys:String x:Key="stringMove">Move</sys:String>
+    <sys:String x:Key="stringMaximize">Maximize</sys:String>
+    <sys:String x:Key="stringMinimize">Minimize</sys:String>
+    <sys:String x:Key="stringClose">Close</sys:String>
+    <sys:String x:Key="stringOK">OK</sys:String>
+    <sys:String x:Key="stringCancel">Cancel</sys:String>
+    <sys:String x:Key="stringApply">Apply</sys:String>
+</ResourceDictionary>

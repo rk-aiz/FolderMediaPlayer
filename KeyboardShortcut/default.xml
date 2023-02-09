@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ArrayOfShortcutKeyEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<ShortcutKeyEntry>
+		<index>10</index>
+		<name>ToggleFullScreen</name>
+		<description>Switch between full-screen and normal window mode</description>
+		<methodName>ToggleWindowState</methodName>
+		<targetName>MainWindow</targetName>
+		<key>F</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>11</index>
+		<name>JumpForwardLargeStep</name>
+		<description />
+		<methodName>JumpForwardLargeStep</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Right</key>
+		<modifiers>Shift</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>12</index>
+		<name>JumpBackwardLargeStep</name>
+		<description />
+		<methodName>JumpBackwardLargeStep</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Left</key>
+		<modifiers>Shift</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>13</index>
+		<name>JumpForwardMediumStep</name>
+		<description />
+		<methodName>JumpForwardMediumStep</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Right</key>
+		<modifiers>Control</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>14</index>
+		<name>JumpBackwardMediumStep</name>
+		<description />
+		<methodName>JumpBackwardMediumStep</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Left</key>
+		<modifiers>Control</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>15</index>
+		<name>JumpForwardSmallStep</name>
+		<description />
+		<methodName>JumpForwardSmallStep</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Right</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>16</index>
+		<name>JumpBackwardSmallStep</name>
+		<description />
+		<methodName>JumpBackwardSmallStep</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Left</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>17</index>
+		<name>ToggleStopAndPlay</name>
+		<description />
+		<methodName>ToggleStopAndPlay</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Enter</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>18</index>
+		<name>TogglePauseAndResume</name>
+		<description />
+		<methodName>TogglePauseAndResume</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Space</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>19</index>
+		<name>NextMedia</name>
+		<description />
+		<methodName>NextMedia</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>PageDown</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>20</index>
+		<name>PreviousMedia</name>
+		<description />
+		<methodName>PreviousMedia</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>PageUp</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>21</index>
+		<name>JumpToBegin</name>
+		<description />
+		<methodName>JumpToBegin</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Home</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>22</index>
+		<name>JumpToEnd</name>
+		<description />
+		<methodName>JumpToEnd</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>End</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>23</index>
+		<name>VolumeUp</name>
+		<description />
+		<methodName>VolumeUp</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Up</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>24</index>
+		<name>VolumeDown</name>
+		<description />
+		<methodName>VolumeDown</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Down</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>25</index>
+		<name>SpeedUp</name>
+		<description />
+		<methodName>SpeedUp</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Add</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>26</index>
+		<name>SpeedDown</name>
+		<description />
+		<methodName>SpeedDown</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>Subtract</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>27</index>
+		<name>NextMedia</name>
+		<description />
+		<methodName>NextMedia</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>MediaNextTrack</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>28</index>
+		<name>PreviousMedia</name>
+		<description />
+		<methodName>PreviousMedia</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>MediaPreviousTrack</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+	<ShortcutKeyEntry>
+		<index>29</index>
+		<name>TogglePauseAndResume</name>
+		<description />
+		<methodName>TogglePauseAndResume</methodName>
+		<targetName>MediaHelper</targetName>
+		<key>MediaPlayPause</key>
+		<modifiers>None</modifiers>
+	</ShortcutKeyEntry>
+</ArrayOfShortcutKeyEntry>

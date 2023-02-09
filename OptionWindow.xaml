@@ -1,0 +1,498 @@
+﻿<Window x:Class="FolderMediaPlayer.OptionWindow"
+        x:Name="optionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FolderMediaPlayer"
+        mc:Ignorable="d"
+        Title="{DynamicResource stringOption}"
+        Height="600" Width="800"
+        ResizeMode="NoResize"
+        Background="{DynamicResource brushGeneralWindowBackground}"
+        FontSize="15"
+        WindowStartupLocation="CenterOwner"
+        >
+    <Window.Resources>
+        
+        <BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
+        <local:EnumToBooleanConverter x:Key="IsCheckedConverter" />
+        <local:DoubleToStringConverter x:Key="DoubleToTextConverter"/>
+        <local:IntToStringConverter x:Key="IntToTextConverter"/>
+        <local:InputKeyConverter x:Key="KeyToStringConverter"/>
+        <local:EnumToStringConverter x:Key="EnumStringConverter"/>
+        <local:PercentageConverter x:Key="PercentageConverter"/>
+
+        <Geometry x:Key="geometryCross">
+            M 0, 0.5 L 19.5, 20 L 0, 39.5 L 0.5, 40 L 20, 20.5 L 39.5, 40 L 40, 39.5 L 20.5, 20 L 40, 0.5 L 39.5, 0 L 20, 19.5 L 0.5, 0 Z
+        </Geometry>
+
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="0, 0, 10, 5"/>
+            <Setter Property="Width" Value="90"/>
+            <Setter Property="Height" Value="25"/>
+        </Style>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="local:Commands.Ok" Executed="OnApply"/>
+        <CommandBinding Command="local:Commands.Cancel" Executed="OnCancel"/>
+    </Window.CommandBindings>
+
+    <Grid>
+        <Grid.Resources>
+            
+            <Style x:Key="OptionPanel" TargetType="{x:Type GroupBox}">
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Grid.Column" Value="1"/>
+            </Style>
+
+            <Style TargetType="{x:Type RadioButton}">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+
+            <Style TargetType="{x:Type CheckBox}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
+            <Style TargetType="{x:Type Path}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Stretch" Value="UniformToFill"/>
+                <Setter Property="Fill" Value="{DynamicResource brushGeneralForeground}"/>
+                <Setter Property="Stroke" Value="{DynamicResource brushGeneralForeground}"/>
+            </Style>
+
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Width" Value="80"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Padding" Value="5, 0"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            </Style>
+
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <TreeView Margin="5">
+            <TreeView.Resources>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="Padding" Value="5" />
+                </Style>
+            </TreeView.Resources>
+            <TreeViewItem x:Name="OptionItemWindow"
+                          Header="{DynamicResource stringWindow}" IsSelected="True"/>
+            <TreeViewItem x:Name="OptionItemOSD"
+                          Header="{DynamicResource stringOSD}"/>
+            <TreeViewItem x:Name="OptionItemPlayback"
+                          Header="{DynamicResource stringPlayback}"/>
+            <TreeViewItem x:Name="OptionItemKeyboard"
+                          Header="{DynamicResource stringKeyboard}" />
+            <TreeViewItem x:Name="OptionItemMouse"
+                          Header="{DynamicResource stringMouse}"/>
+
+        </TreeView>
+
+        <!-- Window setting -->
+        <GroupBox
+            Style="{StaticResource OptionPanel}"
+            Visibility="{Binding IsSelected,
+                ElementName=OptionItemWindow,
+                Converter={StaticResource VisibilityConverter}}">
+            <StackPanel>
+
+                <!-- Window size at startup -->
+                <GroupBox Header="{DynamicResource stringWindowSizeAtStartup}">
+                    <StackPanel>
+                        <RadioButton
+                            GroupName="StartupWindowMode"
+                            IsChecked="{Binding StartupWindowMode,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=Default}"
+                            Content="{DynamicResource stringDefaultWindowSize}"/>
+                        <RadioButton
+                            GroupName="StartupWindowMode"
+                            IsChecked="{Binding StartupWindowMode,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=Memorized}"
+                            Content="{DynamicResource stringMemorizedWindowSizeAtExit}"/>
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
+                                Text="{Binding specifiedWindowWidth,
+                                Mode=TwoWay,
+                                UpdateSourceTrigger=PropertyChanged,
+                                Converter={StaticResource DoubleToTextConverter}}"/>
+                            <Path DockPanel.Dock="Right"
+                                  Width="8" Height="8"
+                                  Data="{StaticResource geometryCross}"/>
+                            <TextBox DockPanel.Dock="Right"
+                                Text="{Binding specifiedWindowHeight,
+                                Mode=TwoWay,
+                                UpdateSourceTrigger=PropertyChanged,
+                                Converter={StaticResource DoubleToTextConverter}}"/>
+                            <RadioButton DockPanel.Dock="Left"
+                                GroupName="StartupWindowMode"
+                                IsChecked="{Binding StartupWindowMode,
+                                    Converter={StaticResource IsCheckedConverter},
+                                    ConverterParameter=Specified}"
+                                Content="{DynamicResource stringSpecifiedWindowSize}" />
+                        </DockPanel>
+                    </StackPanel>
+                </GroupBox>
+                <!-- resize mode when playing video -->
+                <GroupBox Header="{DynamicResource stringResizeModeWhenPlayingVideo}">
+                    <StackPanel>
+                        <RadioButton
+                            GroupName="PlaybackResizeMode"
+                            IsChecked="{Binding PlaybackResizeMode,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=Nothing}"
+                                Content="{DynamicResource stringNoResizing}"/>
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
+                                Text="{Binding AdjustVideoSizeScaling,
+                                Mode=TwoWay,
+                                UpdateSourceTrigger=PropertyChanged,
+                                Converter={StaticResource DoubleToTextConverter}}"/>
+                            <RadioButton DockPanel.Dock="Left"
+                                IsChecked="{Binding PlaybackResizeMode,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=Adjust}"
+                                Content="{DynamicResource stringAdjustToTheVideoSize}"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
+                                Text="{Binding FitToScreenSizeScaling,
+                                Mode=TwoWay,
+                                UpdateSourceTrigger=PropertyChanged,
+                                Converter={StaticResource DoubleToTextConverter}}"/>
+                            <RadioButton DockPanel.Dock="Left"
+                                GroupName="PlaybackResizeMode"
+                                IsChecked="{Binding PlaybackResizeMode,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=Screen}"
+                                Content="{DynamicResource stringFitToTheScreenSize}" />
+                        </DockPanel>
+                    </StackPanel>
+                </GroupBox>
+                <StackPanel>
+                    <CheckBox
+                        IsChecked="{Binding RestoreWindowPosition}"
+                        Content="{DynamicResource stringRestoreTheWindowPositionAtExit}" />
+                    <CheckBox
+                        IsChecked="{Binding FixAspectRatio}"
+                        Content="{DynamicResource stringFixWindowAspectRatio}" />
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- OSD setting -->
+        <GroupBox
+            Style="{StaticResource OptionPanel}"
+            Visibility="{Binding IsSelected,
+                ElementName=OptionItemOSD,
+                Converter={StaticResource VisibilityConverter}}">
+            <StackPanel>
+                <CheckBox
+                    IsChecked="{Binding OnScreenTitleDisplay}"
+                    Content="{DynamicResource stringFileName}"/>
+                <CheckBox
+                    IsChecked="{Binding OnScreenVolumeDisplay}"
+                    Content="{DynamicResource stringVolume}"/>
+                <CheckBox
+                    IsChecked="{Binding OnScreenSpeedDisplay}"
+                    Content="{DynamicResource stringSpeedRatio}"/>
+                <CheckBox
+                    IsChecked="{Binding OnScreenPlaybackTimeDisplay}"
+                    Content="{DynamicResource stringPlaybackTime}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Playback setting -->
+        <GroupBox
+            Style="{StaticResource OptionPanel}"
+            Visibility="{Binding IsSelected,
+                ElementName=OptionItemPlayback,
+                Converter={StaticResource VisibilityConverter}}">
+            <StackPanel>
+                <GroupBox Header="{DynamicResource stringBehaviorAfterPlaybackIsFinished}">
+                    <StackPanel>
+                        <RadioButton
+                            GroupName="PlaybackBehavior"
+                            IsChecked="{Binding PlaybackEndBehavier,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=Stop}"
+                            Content="{DynamicResource stringStop}"/>
+                        <RadioButton
+                            GroupName="PlaybackBehavior"
+                            IsChecked="{Binding PlaybackEndBehavier,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=NextMedia}"
+                            Content="{DynamicResource stringNextMedia}"/>
+                        <RadioButton
+                            GroupName="PlaybackBehavior"
+                            IsChecked="{Binding PlaybackEndBehavier,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=SingleRepeat}"
+                            Content="{DynamicResource stringSingleRepeat}"/>
+
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
+                                Text="{Binding PlaybackBehavierNLoopN,
+                                Mode=TwoWay,
+                                UpdateSourceTrigger=PropertyChanged,
+                                Converter={StaticResource IntToTextConverter}}"/>
+                            <RadioButton DockPanel.Dock="Left"
+                                GroupName="PlaybackBehavior"
+                                IsChecked="{Binding PlaybackEndBehavier,
+                                    Converter={StaticResource IsCheckedConverter},
+                                    ConverterParameter=NLoop}"
+                                Content="{DynamicResource stringNLoop}" />
+                        </DockPanel>
+                    </StackPanel>
+                </GroupBox>
+                
+                <!-- Volume when start playback -->
+                <GroupBox Header="{DynamicResource stringVolumeWhenStartPlayback}">
+                    <StackPanel>
+                        <RadioButton
+                            GroupName="StartPlaybackVolume"
+                            IsChecked="{Binding PlaybackVolume,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=NoChange}"
+                            Content="{DynamicResource stringNoChange}"/>
+
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
+                                Text="{Binding SpecifiedVolume,
+                                Mode=TwoWay,
+                                UpdateSourceTrigger=PropertyChanged,
+                                Converter={StaticResource PercentageConverter}}"/>
+                            <RadioButton DockPanel.Dock="Left"
+                                GroupName="StartPlaybackVolume"
+                                IsChecked="{Binding PlaybackVolume,
+                                    Converter={StaticResource IsCheckedConverter},
+                                    ConverterParameter=Specified}"
+                                Content="{DynamicResource stringSpecifiedVolume}"/>
+                        </DockPanel>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- ShortcutKey Setting -->
+        <GroupBox
+            x:Name="KeyboardOption"
+            Style="{StaticResource OptionPanel}"
+            Visibility="{Binding IsSelected,
+                ElementName=OptionItemKeyboard,
+                Converter={StaticResource VisibilityConverter}}">
+            <GroupBox.Resources>
+
+                <Style x:Key="keyEntryColumnStyle" TargetType="{x:Type TextBlock}">
+                    <Setter Property="Padding" Value="5"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+                
+            </GroupBox.Resources>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <DataGrid
+                    SelectionMode="Single"
+                    AutoGenerateColumns="false"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    ItemsSource="{Binding ShortcutKeyCollection}"
+                    HeadersVisibility="Column"
+                    HorizontalGridLinesBrush="{DynamicResource brushDataGridCellBorder}"
+                    VerticalGridLinesBrush="{DynamicResource brushDataGridCellBorder}"
+                    SelectionChanged="KeyboardShortcutDataGrid_SelectionChanged"
+                    >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Header="{DynamicResource stringIndex}"
+                            Binding="{Binding index}"
+                            ElementStyle="{StaticResource keyEntryColumnStyle}"
+                            IsReadOnly="True"
+                            Width="50"
+                            SortDirection="Ascending"
+                            />
+                        <DataGridTextColumn
+                            Header="{DynamicResource stringCommand}"
+                            Binding="{Binding name}"
+                            ElementStyle="{StaticResource keyEntryColumnStyle}"
+                            IsReadOnly="True"
+                            Width="*"/>
+                        <DataGridTextColumn
+                            Header="{DynamicResource stringKey}"
+                            Binding="{Binding key,
+                                Converter={StaticResource KeyToStringConverter}}"
+                            ElementStyle="{StaticResource keyEntryColumnStyle}"
+                            IsReadOnly="True"
+                            Width="150"/>
+                        <DataGridTextColumn
+                            Header="{DynamicResource stringModifierKeys}"
+                            Binding="{Binding modifiers,
+                                Converter={StaticResource EnumStringConverter},
+                                ConverterParameter=None}"
+                            ElementStyle="{StaticResource keyEntryColumnStyle}"
+                            IsReadOnly="True"
+                            Width="150"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <DockPanel
+                    Grid.Row="1"
+                    DataContext="{Binding helper, ElementName=optionWindow}"
+                    >
+                    <DockPanel.Resources>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Foreground"
+                                Value="{DynamicResource brushKeyboardTextForeground}"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="5"/>
+                            <Setter Property="Background"
+                                    Value="{DynamicResource brushKeyboardSettingTextBlockBackground}"/>
+                            <Setter Property="FontSize" Value="16"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="Padding" Value="5"/>
+                        </Style>
+                    </DockPanel.Resources>
+                    <TextBlock DockPanel.Dock="Left"
+                        Width="150"
+                        Text="{Binding index, StringFormat=Index : {0}}"
+                        />
+                    <TextBlock DockPanel.Dock="Right"
+                        Text="{Binding command, StringFormat=Command : {0}}"
+                        />
+                </DockPanel>
+
+                <DockPanel Grid.Row="2"
+                    DataContext="{Binding helper, ElementName=optionWindow}"
+                    >
+                    <DockPanel.Resources>
+                        <Style TargetType="{x:Type CheckBox}">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="5"/>
+                        </Style>
+                    </DockPanel.Resources>
+                    <Button
+                        DockPanel.Dock="Right"
+                        Click="ShortcutKeyChangeButton_Click"
+                        Content="{DynamicResource stringChange}"
+                        />
+                    <Button
+                        DockPanel.Dock="Right"
+                        Click="ShortcutKeyResetButton_Click"
+                        Content="{DynamicResource stringReset}"
+                        />
+                    <CheckBox DockPanel.Dock="Left"
+                        IsChecked="{Binding modCtrl}"
+                        Content="Ctrl"
+                        />
+                    <CheckBox DockPanel.Dock="Left"
+                        IsChecked="{Binding modAlt}"
+                        Content="Alt"
+                        />
+                    <CheckBox DockPanel.Dock="Left"
+                        IsChecked="{Binding modShift}"
+                        Content="Shift"
+                        />
+                    <TextBox DockPanel.Dock="Left"
+                        PreviewKeyDown="KeyboardInputBox_PreviewKeyDown"
+                        Width="200"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Margin="10, 0"
+                        Padding="0"
+                        HorizontalAlignment="Left"
+                        TextAlignment="Center"
+                        BorderThickness="2"
+                        BorderBrush="{DynamicResource brushKeyboardTextForeground}"
+                        Cursor="Hand"
+                        CaretBrush="Transparent"
+                        Foreground="{DynamicResource brushKeyboardInputBoxForeground}"
+                        Background="{DynamicResource brushKeyboardInputBoxBackground}"
+                        Text="{Binding Path=helper.key,
+                            ElementName=optionWindow,
+                            Converter={StaticResource KeyToStringConverter}}"
+                       />
+                </DockPanel>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Column="1"
+            Style="{StaticResource OptionPanel}"
+            Visibility="{Binding IsSelected,
+                ElementName=OptionItemMouse,
+                Converter={StaticResource VisibilityConverter}}">
+            <StackPanel>
+                <GroupBox Header="{DynamicResource stringMouseWheel}">
+                    <StackPanel>
+                        <RadioButton
+                                GroupName="MouseWheel"
+                                IsChecked="{Binding MouseWheelBehavier,
+                                    Converter={StaticResource IsCheckedConverter},
+                                    ConverterParameter=Volume}"
+                                Content="{DynamicResource stringVolumeControl}"/>
+                        <RadioButton
+                            GroupName="MouseWheel"
+                            IsChecked="{Binding MouseWheelBehavier,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=Speed}"
+                            Content="{DynamicResource stringSpeedControl}"/>
+                        <RadioButton
+                                GroupName="MouseWheel"
+                                IsChecked="{Binding MouseWheelBehavier,
+                                    Converter={StaticResource IsCheckedConverter},
+                                    ConverterParameter=JumpSmall}"
+                                Content="{DynamicResource stringJumpSmallStep}" />
+                        <RadioButton
+                                GroupName="MouseWheel"
+                                IsChecked="{Binding MouseWheelBehavier,
+                                    Converter={StaticResource IsCheckedConverter},
+                                    ConverterParameter=JumpMedium}"
+                                Content="{DynamicResource stringJumpMediumStep}" />
+                        <RadioButton
+                                GroupName="MouseWheel"
+                                IsChecked="{Binding MouseWheelBehavier,
+                                    Converter={StaticResource IsCheckedConverter},
+                                    ConverterParameter=JumpLarge}"
+                                Content="{DynamicResource stringJumpLargeStep}" />
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Ok Cancel Apply Button -->
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right">
+            <Button Content="{DynamicResource stringOK}"
+                    Command="local:Commands.Ok"
+                    CommandParameter="OK"/>
+            <Button Content="{DynamicResource stringCancel}"
+                    Command="local:Commands.Cancel"
+                    />
+            <Button Content="{DynamicResource stringApply}"
+                    Command="{Binding ApplyCommand}"
+                    />
+        </StackPanel>
+    </Grid>
+</Window>
