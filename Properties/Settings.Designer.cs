@@ -286,5 +286,17 @@ namespace FolderMediaPlayer.Properties {
                 this["OnScreenSpeedDisplay"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AutoHide")]
+        public string MouseCursor {
+            get {
+                return ((string)(this["MouseCursor"]));
+            }
+            set {
+                this["MouseCursor"] = value;
+            }
+        }
     }
 }

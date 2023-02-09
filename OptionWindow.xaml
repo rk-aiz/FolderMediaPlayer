@@ -450,6 +450,8 @@
                 ElementName=OptionItemMouse,
                 Converter={StaticResource VisibilityConverter}}">
             <StackPanel>
+                
+                <!-- Mouse Wheel Setting -->
                 <GroupBox Header="{DynamicResource stringMouseWheel}">
                     <StackPanel>
                         <RadioButton
@@ -482,6 +484,30 @@
                                     Converter={StaticResource IsCheckedConverter},
                                     ConverterParameter=JumpLarge}"
                                 Content="{DynamicResource stringJumpLargeStep}" />
+                    </StackPanel>
+                </GroupBox>
+                
+                <!-- Mouse Cursor Setting -->
+                <GroupBox Header="{DynamicResource stringMouseCursorDisplayMode}">
+                    <StackPanel>
+                        <RadioButton
+                                GroupName="MouseCursor"
+                                IsChecked="{Binding MouseCursor,
+                                    Converter={StaticResource IsCheckedConverter},
+                                    ConverterParameter=Visible}"
+                                Content="{DynamicResource stringVisible}"/>
+                        <RadioButton
+                            GroupName="MouseCursor"
+                            IsChecked="{Binding MouseCursor,
+                                Converter={StaticResource IsCheckedConverter},
+                                ConverterParameter=Hidden}"
+                            Content="{DynamicResource stringHidden}"/>
+                        <RadioButton
+                                GroupName="MouseCursor"
+                                IsChecked="{Binding MouseCursor,
+                                    Converter={StaticResource IsCheckedConverter},
+                                    ConverterParameter=AutoHide}"
+                                Content="{DynamicResource stringAutoHide}" />
                     </StackPanel>
                 </GroupBox>
             </StackPanel>

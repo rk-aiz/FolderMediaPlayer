@@ -68,5 +68,8 @@
     <Setting Name="OnScreenSpeedDisplay" Type="System.String" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="MouseCursor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AutoHide</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

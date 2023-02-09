@@ -84,6 +84,12 @@ namespace FolderMediaPlayer
 
                     break;
             }
+
+            this.ScreenThumb.SetBinding(ScreenThumb.CursorModeProperty, new Binding("MouseCursor")
+            {
+                Source = this.settings
+            });
+
             HwndSource hwndSource = (HwndSource)HwndSource.FromVisual(this);
             hwndSource.AddHook(WndProc);
 

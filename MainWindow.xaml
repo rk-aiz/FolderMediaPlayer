@@ -33,6 +33,8 @@
 
     </Window.Resources>
 
+
+
     <Grid
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
@@ -162,20 +164,36 @@
             </local:OnScreenPlaybackTimeLabel.Content>
         </local:OnScreenPlaybackTimeLabel>
 
-        <Thumb x:Name="ScreenThumb"
+        <local:ScreenThumb x:Name="ScreenThumb"
             IsTabStop="False"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             DragDelta="ScreenThumb_DragDelta"
             Margin="10"
+            Cursor="None"
             Width="NaN"
             Height="NaN"
             >
+            <Thumb.Resources>
+                <Storyboard x:Key="CursorAnimation">
+                    <BooleanAnimationUsingKeyFrames
+                                    Duration="0:0:3"
+                                    Storyboard.TargetProperty="(local:ScreenThumb.CursorVisibility)">
+                        <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="True" />
+                        <DiscreteBooleanKeyFrame KeyTime="0:0:3" Value="False" />
+                    </BooleanAnimationUsingKeyFrames>
+                </Storyboard>
+            </Thumb.Resources>
             <Thumb.Template>
                 <ControlTemplate TargetType="{x:Type Thumb}">
                         <Rectangle Fill="Transparent" Stroke="Transparent"/>
                 </ControlTemplate>
             </Thumb.Template>
-        </Thumb>
+            <Thumb.Triggers>
+                <EventTrigger RoutedEvent="Thumb.MouseMove">
+                    <BeginStoryboard Storyboard="{StaticResource CursorAnimation}" />
+                </EventTrigger>
+            </Thumb.Triggers>
+        </local:ScreenThumb>
     </Grid>
 </Window>
