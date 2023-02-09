@@ -22,11 +22,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="DefaultKeyboardShortcut.xml" />
+    <Compile Remove="Icon\**" />
+    <EmbeddedResource Remove="Icon\**" />
+    <None Remove="Icon\**" />
+    <Page Remove="Icon\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Icon\icon.ico" />
+    <None Remove="DefaultKeyboardShortcut.xml" />
   </ItemGroup>
 
   <ItemGroup>
