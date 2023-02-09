@@ -2,6 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+    <sys:String x:Key="stringAutoHide">Auto-Hide</sys:String>
+    <sys:String x:Key="stringHidden">Hidden</sys:String>
+    <sys:String x:Key="stringVisible">Visible</sys:String>
+    <sys:String x:Key="stringMouseCursorDisplayMode">Mouse Cursor Display Mode</sys:String>
     <sys:String x:Key="stringSpeedRatio">Playback Speed Ratio</sys:String>
     <sys:String x:Key="stringNoChange">No Change</sys:String>
     <sys:String x:Key="stringJumpLargeStep">Jump large step</sys:String>

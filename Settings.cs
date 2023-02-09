@@ -169,6 +169,13 @@ namespace FolderMediaPlayer
             set { this._mouseWheelBehavier = value; NotifyPropertyChanged(); }
         }
 
+        private MouseCursorMode _mouseCursor = MouseCursorMode.AutoHide;
+        public MouseCursorMode MouseCursor
+        {
+            get { return this._mouseCursor; }
+            set { this._mouseCursor = value; NotifyPropertyChanged(); }
+        }
+
         public bool propertySaved = false;
         public int propertyChangeCounter{ get; set; } = 0;
 
@@ -253,6 +260,9 @@ namespace FolderMediaPlayer
                 "MouseWheelBehavier");
             this._playbackVolume = (PlaybackVolume)ReadEnumSetting<PlaybackVolume>(
                 "PlaybackVolume");
+            
+            this.MouseCursor = (MouseCursorMode)ReadEnumSetting<MouseCursorMode>(
+                "MouseCursor");
 
             this._lastVolume = ReadDoubleSetting("LastVolume");
             this._specifiedVolume = ReadDoubleSetting("SpecifiedVolume");
@@ -385,6 +395,7 @@ namespace FolderMediaPlayer
             SetSetting("PlaybackVolume", this.PlaybackVolume);
             SetSetting("LastVolume", this.LastVolume);
             SetSetting("SpecifiedVolume", this.SpecifiedVolume);
+            SetSetting("MouseCursor", this.MouseCursor);
 
             Properties.Settings.Default.Save();
 
@@ -441,4 +452,11 @@ public enum PlaybackVolume
 {
     NoChange,
     Specified
+}
+
+public enum MouseCursorMode
+{
+    Visible,
+    Hidden,
+    AutoHide,
 }

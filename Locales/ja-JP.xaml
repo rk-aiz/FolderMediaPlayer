@@ -2,6 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+
+    <sys:String x:Key="stringAutoHide">自動非表示</sys:String>
+    <sys:String x:Key="stringHidden">非表示</sys:String>
+    <sys:String x:Key="stringVisible">表示</sys:String>
+    <sys:String x:Key="stringMouseCursorDisplayMode">マウスカーソル表示</sys:String>
     <sys:String x:Key="stringSpeedRatio">再生速度</sys:String>
     <sys:String x:Key="stringNoChange">変更なし</sys:String>
     <sys:String x:Key="stringJumpLargeStep">ジャンプ（大）</sys:String>

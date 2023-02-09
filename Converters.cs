@@ -242,4 +242,33 @@ namespace FolderMediaPlayer
             return Binding.DoNothing;
         }
     }
+
+    [ValueConversion(typeof(MouseCursorMode), typeof(Cursor))]
+    public class CursorVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || value.ToString() == String.Empty)
+                return Binding.DoNothing;
+
+            Debug.WriteLine("Mouse Cursor {0}", (MouseCursorMode)value);
+
+            switch ((MouseCursorMode)value)
+            {
+                case MouseCursorMode.Visible :
+                    return Cursors.Arrow;
+                case MouseCursorMode.Hidden :
+                    return Cursors.None;
+                case MouseCursorMode.AutoHide:
+                    return Cursors.Arrow;
+            }
+
+            return Binding.DoNothing;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return Binding.DoNothing;
+        }
+    }
 }
