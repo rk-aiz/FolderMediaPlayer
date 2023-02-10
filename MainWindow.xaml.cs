@@ -25,6 +25,7 @@ using System.Runtime.InteropServices;
 using System.Reflection.Metadata;
 using System.Configuration;
 using System.Windows.Media.Media3D;
+using Microsoft.Win32;
 
 namespace FolderMediaPlayer
 {
@@ -38,11 +39,50 @@ namespace FolderMediaPlayer
         private MediaHelper mediaHelper = new MediaHelper { mediaMinWidth = 292.0 * 16.0 / 9.0, mediaMinHeight = 292.0 };
         
         private Settings settings = new Settings();
+
+        public Boolean CursorVisibility
+        {
+            get { return (Boolean)GetValue(CursorVisibilityProperty); }
+            set { SetValue(CursorVisibilityProperty, value); }
+        }
+
+        public static readonly DependencyProperty CursorVisibilityProperty =
+            DependencyProperty.Register("CursorVisibility", typeof(Boolean), typeof(MainWindow),
+                                        new PropertyMetadata(true, new PropertyChangedCallback(CursorVisibility_PropertyChanged)));
+
+        public Cursor DefaultCursor
+        {
+            get { return (Cursor)GetValue(DefaultCursorProperty); }
+            set { SetValue(DefaultCursorProperty, value); }
+        }
+
+        public static readonly DependencyProperty DefaultCursorProperty =
+            DependencyProperty.Register("DafaultCursor", typeof(Cursor), typeof(MainWindow),
+                                        new PropertyMetadata(Cursors.Arrow,
+                                            new PropertyChangedCallback(DefaultCursor_PropertyChanged)));
+
+        public MouseCursorMode CursorMode
+        {
+            get { return (MouseCursorMode)GetValue(CursorModeProperty); }
+            set { SetValue(CursorModeProperty, value); }
+        }
+
+        public static readonly DependencyProperty CursorModeProperty =
+            DependencyProperty.Register("CursorMode", typeof(MouseCursorMode), typeof(MainWindow),
+                                        new PropertyMetadata(MouseCursorMode.Visible,
+                                            new PropertyChangedCallback(CursorMode_PropertyChanged)));
+
         public MainWindow()
         {
             InitializeComponent();
             this.DataContext = mediaHelper;
             this.windowChrome = WindowChrome.GetWindowChrome(this);
+
+            SetBinding(CursorModeProperty, new Binding("MouseCursor")
+            {
+                Source = this.settings,
+                Mode = BindingMode.OneWay,
+            });
 
             if (this.settings.RestoreWindowPosition)
             {
@@ -85,11 +125,6 @@ namespace FolderMediaPlayer
                     break;
             }
 
-            this.ScreenThumb.SetBinding(ScreenThumb.CursorModeProperty, new Binding("MouseCursor")
-            {
-                Source = this.settings
-            });
-
             HwndSource hwndSource = (HwndSource)HwndSource.FromVisual(this);
             hwndSource.AddHook(WndProc);
 
@@ -106,7 +141,7 @@ namespace FolderMediaPlayer
                 fType = (UInt32)MFT.MENUBARBREAK,
 
                 fState = 0,
-                wID = (uint)0x0001,
+                wID = (uint)MIIM_ID_OPTION,
                 hSubMenu = IntPtr.Zero,
                 hbmpChecked = IntPtr.Zero,
                 hbmpUnchecked = IntPtr.Zero,
@@ -116,17 +151,67 @@ namespace FolderMediaPlayer
                 hbmpItem = IntPtr.Zero
             };
             InsertMenuItem(hSysMenu, 0, true, ref mii);
+
+            MENUITEMINFO miOpenDiag = new MENUITEMINFO
+            {
+                cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
+                fMask = MIIM.ID | MIIM.STRING,
+                fType = (UInt32)MFT.MENUBARBREAK,
+                fState = 0,
+                wID = (uint)MIIM_ID_OPENDIALOG,
+                hSubMenu = IntPtr.Zero,
+                hbmpChecked = IntPtr.Zero,
+                hbmpUnchecked = IntPtr.Zero,
+                dwItemData = 0,
+                dwTypeData = (string)this.FindResource("stringOpenFile"),
+                cch = 0,
+                hbmpItem = IntPtr.Zero
+            };
+            InsertMenuItem(hSysMenu, 0, true, ref miOpenDiag);
         }
 
-        
-
-        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        private static void CursorMode_PropertyChanged(DependencyObject d,
+    DependencyPropertyChangedEventArgs e)
         {
-
-            if (msg == 0x112) // WM_SYSCOMMAND
+            MainWindow source = (MainWindow)d;
+            switch ((MouseCursorMode)e.NewValue)
             {
-                if ((int)wParam == MIIM_ID_OPTION) // Option Window
-                {
+                case MouseCursorMode.Visible:
+                case MouseCursorMode.AutoHide:
+                    source.Cursor = source.DefaultCursor;
+                    break;
+                case MouseCursorMode.Hidden:
+                    source.Cursor = Cursors.None;
+                    break;
+            }
+        }
+
+        private static void DefaultCursor_PropertyChanged(DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            MainWindow source = (MainWindow)d;
+            source.Cursor = (Cursor)e.NewValue;
+        }
+
+        private static void CursorVisibility_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            MainWindow source = (MainWindow)d;
+
+            if (true == (Boolean)e.NewValue && source.CursorMode != MouseCursorMode.Hidden)
+            {
+                source.Cursor = source.DefaultCursor;
+            }
+            else if (source.CursorMode != MouseCursorMode.Visible)
+            {
+                source.Cursor = Cursors.None;
+            }
+        }
+
+        private bool SysCommandProc(IntPtr id)
+        {
+            switch ((int)id) // Option Window
+            {
+                case MIIM_ID_OPTION:
                     OptionWindow optionWindow = new OptionWindow();
                     optionWindow.Owner = this;
                     bool? result = optionWindow.ShowDialog();
@@ -143,69 +228,89 @@ namespace FolderMediaPlayer
                     }
 
                     Debug.WriteLine(this.settings.StartupWindowMode);
+                    return true;
 
-                    handled = true;
-                    return IntPtr.Zero;
-                }
+                case MIIM_ID_OPENDIALOG:
+                    OpenFileDialog openFileDialog = new OpenFileDialog();
+                    if (openFileDialog.ShowDialog() == true)
+                        OpenFile(openFileDialog.FileName);
+                    return true;
             }
-            else if (msg == 0x0214) //WM_SIZING
+            return false;
+        }
+
+        private void SizingProc(IntPtr wParam, IntPtr lParam)
+        {
+            tagRECT rect = (tagRECT)Marshal.PtrToStructure(lParam, typeof(tagRECT));
+
+            tagRECT scaledRect = rect.Transform(PresentationSource.FromVisual(this).
+                CompositionTarget.TransformFromDevice);
+
+            switch ((int)wParam)
             {
-                tagRECT rect = (tagRECT)Marshal.PtrToStructure(lParam, typeof(tagRECT));
+                case 1: //WMSZ_LEFT
+                    this.mediaHelper.mediaWidth = scaledRect.right - scaledRect.left;
+                    scaledRect.top = scaledRect.bottom - Convert.ToInt32(this.mediaHelper.mediaHeight);
+                    break;
+                case 2: //WMSZ_RIGHT
+                    this.mediaHelper.mediaWidth = scaledRect.right - scaledRect.left;
+                    scaledRect.bottom = scaledRect.top + Convert.ToInt32(this.mediaHelper.mediaHeight);
+                    break;
+                case 3: //WMSZ_TOP
+                    this.mediaHelper.mediaHeight = scaledRect.bottom - scaledRect.top;
+                    scaledRect.right = scaledRect.left + Convert.ToInt32(this.mediaHelper.mediaWidth);
+                    break;
+                case 4: //WMSZ_TOPLEFT
+                    this.mediaHelper.mediaWidth = scaledRect.right - scaledRect.left;
+                    scaledRect.top = scaledRect.bottom - Convert.ToInt32(this.mediaHelper.mediaHeight);
+                    break;
+                case 5: //WMSZ_TOPRIGHT
+                case 6: //WMSZ_BOTTOM
+                    this.mediaHelper.mediaHeight = scaledRect.bottom - scaledRect.top;
+                    scaledRect.right = scaledRect.left + Convert.ToInt32(this.mediaHelper.mediaWidth);
+                    break;
+                case 7: //WMSZ_BOTTOMLEFT
+                    this.mediaHelper.mediaWidth = scaledRect.right - scaledRect.left;
+                    scaledRect.bottom = scaledRect.top + Convert.ToInt32(this.mediaHelper.mediaHeight);
+                    break;
+                case 8: //WMSZ_BOTTOMRIGHT
+                    this.mediaHelper.mediaHeight = scaledRect.bottom - scaledRect.top;
+                    scaledRect.right = scaledRect.left + Convert.ToInt32(this.mediaHelper.mediaWidth);
+                    break;
+            }
 
-                tagRECT scaledRect = rect.Transform(PresentationSource.FromVisual(this).
-                    CompositionTarget.TransformFromDevice);
+            if (scaledRect.right - scaledRect.left <= this.mediaHelper.mediaMinWidth)
+            {
+                scaledRect.left = (int)this.Left;
+                scaledRect.right = scaledRect.left + (int)this.mediaHelper.mediaMinWidth;
+            }
 
-                switch ((int)wParam)
-                {
-                    case 1: //WMSZ_LEFT
-                        this.mediaHelper.mediaWidth = scaledRect.right - scaledRect.left;
-                        scaledRect.top = scaledRect.bottom - Convert.ToInt32(this.mediaHelper.mediaHeight);
-                        break;
-                    case 2: //WMSZ_RIGHT
-                        this.mediaHelper.mediaWidth = scaledRect.right - scaledRect.left;
-                        scaledRect.bottom = scaledRect.top + Convert.ToInt32(this.mediaHelper.mediaHeight);
-                        break;
-                    case 3: //WMSZ_TOP
-                        this.mediaHelper.mediaHeight = scaledRect.bottom - scaledRect.top;
-                        scaledRect.right = scaledRect.left + Convert.ToInt32(this.mediaHelper.mediaWidth);
-                        break;
-                    case 4: //WMSZ_TOPLEFT
-                        this.mediaHelper.mediaWidth = scaledRect.right - scaledRect.left;
-                        scaledRect.top = scaledRect.bottom - Convert.ToInt32(this.mediaHelper.mediaHeight);
-                        break;
-                    case 5: //WMSZ_TOPRIGHT
-                    case 6: //WMSZ_BOTTOM
-                        this.mediaHelper.mediaHeight = scaledRect.bottom - scaledRect.top;
-                        scaledRect.right = scaledRect.left + Convert.ToInt32(this.mediaHelper.mediaWidth);
-                        break;
-                    case 7: //WMSZ_BOTTOMLEFT
-                        this.mediaHelper.mediaWidth = scaledRect.right - scaledRect.left;
-                        scaledRect.bottom = scaledRect.top + Convert.ToInt32(this.mediaHelper.mediaHeight);
-                        break;
-                    case 8: //WMSZ_BOTTOMRIGHT
-                        this.mediaHelper.mediaHeight = scaledRect.bottom - scaledRect.top;
-                        scaledRect.right = scaledRect.left + Convert.ToInt32(this.mediaHelper.mediaWidth);
-                        break;
-                }
+            if (scaledRect.bottom - scaledRect.top <= this.mediaHelper.mediaMinHeight)
+            {
+                scaledRect.top = (int)this.Top;
+                scaledRect.bottom = scaledRect.top + (int)this.mediaHelper.mediaMinHeight;
+            }
 
-                if (scaledRect.right - scaledRect.left <= this.mediaHelper.mediaMinWidth)
-                {
-                    scaledRect.left = (int)this.Left;
-                    scaledRect.right = scaledRect.left + (int)this.mediaHelper.mediaMinWidth;
-                }
+            Marshal.StructureToPtr(
+                scaledRect.Transform(
+                    PresentationSource.FromVisual(this).
+                        CompositionTarget.TransformToDevice),
+                lParam, true);
+        }
 
-                if (scaledRect.bottom - scaledRect.top <= this.mediaHelper.mediaMinHeight)
-                {
-                    scaledRect.top = (int)this.Top;
-                    scaledRect.bottom = scaledRect.top + (int)this.mediaHelper.mediaMinHeight;
-                }
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
 
-                Marshal.StructureToPtr(
-                    scaledRect.Transform(
-                        PresentationSource.FromVisual(this).
-                            CompositionTarget.TransformToDevice),
-                    lParam, true);
-                handled = true;
+            switch (msg)
+            {
+                case 0x112: // WM_SYSCOMMAND
+                    if (SysCommandProc(wParam))
+                        handled = true;
+                    break;
+                case 0x0214: //WM_SIZING
+                    SizingProc(wParam, lParam);
+                    handled = true;
+                    break;
             }
             /*else if (msg == 0x001C)
             {
@@ -289,15 +394,19 @@ namespace FolderMediaPlayer
             }
         }
 
+        private void OpenFile(string path)
+        {
+            this.mediaHelper.SetMedia(path);
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
+        }
+
         private void Window_Drop(object sender, DragEventArgs e)
         {
             StringCollection fileList = ((DataObject)e.Data).GetFileDropList();
 
             if (null != fileList)
             {
-                var path = fileList[0];
-                this.mediaHelper.SetMedia(path);
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
+                OpenFile(fileList[0]);
             }
         }
 
@@ -446,7 +555,7 @@ namespace FolderMediaPlayer
         };
 
     private const int MIIM_ID_OPTION = 0x0001;
-
+    private const int MIIM_ID_OPENDIALOG = 0x0002;
     }
 }
 

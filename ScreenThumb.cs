@@ -41,7 +41,24 @@ namespace FolderMediaPlayer
 
         public static readonly DependencyProperty CursorModeProperty =
             DependencyProperty.Register("CursorMode", typeof(MouseCursorMode), typeof(ScreenThumb),
-                                        new PropertyMetadata(MouseCursorMode.Visible));
+                                        new PropertyMetadata(MouseCursorMode.Visible,
+                                            new PropertyChangedCallback(CursorMode_PropertyChanged)));
+
+        private static void CursorMode_PropertyChanged(DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            ScreenThumb source = (ScreenThumb)d;
+            switch ((MouseCursorMode)e.NewValue)
+            {
+                case MouseCursorMode.Visible:
+                case MouseCursorMode.AutoHide:
+                    source.Cursor = source.DefaultCursor;
+                    break;
+                case MouseCursorMode.Hidden:
+                    source.Cursor = Cursors.None;
+                    break;
+            }
+        }
 
         private static void DefaultCursor_PropertyChanged(DependencyObject d,
             DependencyPropertyChangedEventArgs e)

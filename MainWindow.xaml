@@ -31,9 +31,21 @@
         <local:PlaybackTimeConverter x:Key="PlaybackTimeConverter"/>
         <local:DoubleToStringConverter x:Key="DoubleToStringConverter"/>
 
+        <Storyboard x:Key="CursorAnimation">
+            <BooleanAnimationUsingKeyFrames
+                                    Duration="0:0:3"
+                                    Storyboard.TargetProperty="(local:MainWindow.CursorVisibility)">
+                <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="True" />
+                <DiscreteBooleanKeyFrame KeyTime="0:0:3" Value="False" />
+            </BooleanAnimationUsingKeyFrames>
+        </Storyboard>
     </Window.Resources>
 
-
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.MouseMove">
+            <BeginStoryboard Storyboard="{StaticResource CursorAnimation}" />
+        </EventTrigger>
+    </Window.Triggers>
 
     <Grid
         HorizontalAlignment="Center"
@@ -164,36 +176,20 @@
             </local:OnScreenPlaybackTimeLabel.Content>
         </local:OnScreenPlaybackTimeLabel>
 
-        <local:ScreenThumb x:Name="ScreenThumb"
+        <Thumb x:Name="ScreenThumb"
             IsTabStop="False"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             DragDelta="ScreenThumb_DragDelta"
             Margin="10"
-            Cursor="None"
             Width="NaN"
             Height="NaN"
             >
-            <Thumb.Resources>
-                <Storyboard x:Key="CursorAnimation">
-                    <BooleanAnimationUsingKeyFrames
-                                    Duration="0:0:3"
-                                    Storyboard.TargetProperty="(local:ScreenThumb.CursorVisibility)">
-                        <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="True" />
-                        <DiscreteBooleanKeyFrame KeyTime="0:0:3" Value="False" />
-                    </BooleanAnimationUsingKeyFrames>
-                </Storyboard>
-            </Thumb.Resources>
             <Thumb.Template>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Rectangle Fill="Transparent" Stroke="Transparent"/>
+                    <Rectangle Fill="Transparent" Stroke="Transparent"/>
                 </ControlTemplate>
             </Thumb.Template>
-            <Thumb.Triggers>
-                <EventTrigger RoutedEvent="Thumb.MouseMove">
-                    <BeginStoryboard Storyboard="{StaticResource CursorAnimation}" />
-                </EventTrigger>
-            </Thumb.Triggers>
-        </local:ScreenThumb>
+        </Thumb>
     </Grid>
 </Window>

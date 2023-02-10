@@ -61,7 +61,7 @@
     <sys:String x:Key="stringOK">OK</sys:String>
     <sys:String x:Key="stringCancel">Cancel</sys:String>
     <sys:String x:Key="stringApply">Apply</sys:String>
-
+    <sys:String x:Key="stringOpenFile">Open File...</sys:String>
 
     <sys:String x:Key="stringToggleFullScreen">Fullscreen Switching</sys:String>
 </ResourceDictionary>
