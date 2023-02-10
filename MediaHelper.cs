@@ -528,24 +528,24 @@ namespace FolderMediaPlayer
                 this._mediaFailed = false;
                 this._mediaEnded = false;
 
-                switch ((PlaybackBehavier)Settings.ReadEnumSetting<PlaybackBehavier>(
-                    "PlaybackEndBehavier"))
+                switch ((PlaybackBehavior)Settings.ReadEnumSetting<PlaybackBehavior>(
+                    "PlaybackEndBehavior"))
                 {
-                    case PlaybackBehavier.Stop:
+                    case PlaybackBehavior.Stop:
                         this.mediaController.Stop();
                         break;
-                    case PlaybackBehavier.SingleRepeat:
+                    case PlaybackBehavior.SingleRepeat:
 
                         this.mediaController.Stop();
                         this.playing = true;
                         this.mediaController.Begin();
                         break;
-                    case PlaybackBehavier.NextMedia:
+                    case PlaybackBehavior.NextMedia:
 
                         SetMediaSourceFromNextFile();
                         this.playing = true;
                         break;
-                    case PlaybackBehavier.NLoop:
+                    case PlaybackBehavior.NLoop:
 
                         string sourcePath = GetNextFile();
 
@@ -559,9 +559,9 @@ namespace FolderMediaPlayer
                         }
 
                         Debug.WriteLine("NLoop : {0} / {1}", counter,
-                            Settings.ReadIntSetting("PlaybackBehavierNLoopN", 1));
+                            Settings.ReadIntSetting("PlaybackBehaviorNLoopN", 1));
 
-                        if (counter >= Settings.ReadIntSetting("PlaybackBehavierNLoopN", 1))
+                        if (counter >= Settings.ReadIntSetting("PlaybackBehaviorNLoopN", 1))
                         {
                             Debug.WriteLine("NLoop Stop");
                             this.playedMediaCollection.Clear();

@@ -62,4 +62,6 @@
     <sys:String x:Key="stringCancel">キャンセル</sys:String>
     <sys:String x:Key="stringApply">適用</sys:String>
     <sys:String x:Key="stringOpenFile">ファイルを開く...</sys:String>
+    <sys:String x:Key="stringMouseButtonBehavior">マウスボタンの挙動</sys:String>
+    <sys:String x:Key="stringMouseSideButton">マウスサイドボタン</sys:String>
 </ResourceDictionary>

@@ -30,11 +30,11 @@ namespace FolderMediaPlayer
             set { this._playbackResizeMode = value; NotifyPropertyChanged(); }
         }
 
-        private PlaybackBehavier _playbackEndBehavier = PlaybackBehavier.NextMedia;
-        public PlaybackBehavier PlaybackEndBehavier
+        private PlaybackBehavior _playbackEndBehavior = PlaybackBehavior.NextMedia;
+        public PlaybackBehavior PlaybackEndBehavior
         {
-            get { return this._playbackEndBehavier; }
-            set { this._playbackEndBehavier = value; NotifyPropertyChanged(); }
+            get { return this._playbackEndBehavior; }
+            set { this._playbackEndBehavior = value; NotifyPropertyChanged(); }
         }
 
         private PlaybackVolume _playbackVolume = PlaybackVolume.NoChange;
@@ -58,11 +58,11 @@ namespace FolderMediaPlayer
             set { this._specifiedVolume = value; NotifyPropertyChanged(); }
         }
 
-        private int _playbackBehavierNLoopN = 1;
-        public int PlaybackBehavierNLoopN
+        private int _playbackBehaviorNLoopN = 1;
+        public int PlaybackBehaviorNLoopN
         {
-            get { return this._playbackBehavierNLoopN; }
-            set { this._playbackBehavierNLoopN = value; NotifyPropertyChanged(); }
+            get { return this._playbackBehaviorNLoopN; }
+            set { this._playbackBehaviorNLoopN = value; NotifyPropertyChanged(); }
         }
 
         private double _lastWindowWidth = 1280;
@@ -162,11 +162,25 @@ namespace FolderMediaPlayer
             set { this._onScreenSpeedDisplay = value; NotifyPropertyChanged(); }
         }
 
-        private MouseBehavier _mouseWheelBehavier = MouseBehavier.Volume;
-        public MouseBehavier MouseWheelBehavier
+        public MouseBehavior[] EnumMouseBehavior
         {
-            get { return this._mouseWheelBehavier; }
-            set { this._mouseWheelBehavier = value; NotifyPropertyChanged(); }
+            get { return
+                    (MouseBehavior[])Enum.GetValues(
+                        typeof(MouseBehavior)); }
+        }
+
+        private MouseBehavior _mouseXButtonBehavior = MouseBehavior.ChangeMedia;
+        public MouseBehavior MouseXButtonBehavior
+        {
+            get { return this._mouseXButtonBehavior; }
+            set { this._mouseXButtonBehavior = value; NotifyPropertyChanged(); }
+        }
+
+        private MouseBehavior _mouseWheelBehavior = MouseBehavior.Volume;
+        public MouseBehavior MouseWheelBehavior
+        {
+            get { return this._mouseWheelBehavior; }
+            set { this._mouseWheelBehavior = value; NotifyPropertyChanged(); }
         }
 
         private MouseCursorMode _mouseCursor = MouseCursorMode.AutoHide;
@@ -254,13 +268,14 @@ namespace FolderMediaPlayer
                 "StartupWindowMode");
             this._playbackResizeMode = (ResizeMode)ReadEnumSetting<ResizeMode>(
                 "ResizeModeWhenPlayingVideo");
-            this._playbackEndBehavier = (PlaybackBehavier)ReadEnumSetting<PlaybackBehavier>(
-                "PlaybackEndBehavier");
-            this._mouseWheelBehavier = (MouseBehavier)ReadEnumSetting<MouseBehavier>(
-                "MouseWheelBehavier");
+            this._playbackEndBehavior = (PlaybackBehavior)ReadEnumSetting<PlaybackBehavior>(
+                "PlaybackEndBehavior");
+            this._mouseWheelBehavior = (MouseBehavior)ReadEnumSetting<MouseBehavior>(
+                "MouseWheelBehavior");
+            this._mouseXButtonBehavior = (MouseBehavior)ReadEnumSetting<MouseBehavior>(
+                "MouseXButtonBehavior");
             this._playbackVolume = (PlaybackVolume)ReadEnumSetting<PlaybackVolume>(
                 "PlaybackVolume");
-            
             this.MouseCursor = (MouseCursorMode)ReadEnumSetting<MouseCursorMode>(
                 "MouseCursor");
 
@@ -279,7 +294,7 @@ namespace FolderMediaPlayer
             this._onScreenVolumeDisplay = ReadBoolSetting("OnScreenVolumeDisplay", false);
             this._onScreenSpeedDisplay = ReadBoolSetting("OnScreenSpeedDisplay", false);
             this._onScreenPlaybackTimeDisplay = ReadBoolSetting("OnScreenPlaybackTimeDisplay", false);
-            this._playbackBehavierNLoopN = ReadIntSetting("PlaybackBehavierNLoopN", 1);
+            this._playbackBehaviorNLoopN = ReadIntSetting("PlaybackBehaviorNLoopN", 1);
             this._onScreenTitleDisplay = ReadBoolSetting("OnScreenTitleDisplay", false);
 
             this.propertyChangeCounter = 0;
@@ -375,7 +390,8 @@ namespace FolderMediaPlayer
         {
             SetSetting("StartupWindowMode", this.StartupWindowMode);
             SetSetting("ResizeModeWhenPlayingVideo", this.PlaybackResizeMode);
-            SetSetting("MouseWheelBehavier", this.MouseWheelBehavier);
+            SetSetting("MouseWheelBehavior", this.MouseWheelBehavior);
+            SetSetting("MouseXButtonBehavior", this.MouseXButtonBehavior);
             SetSetting("LastWindowWidth", this.lastWindowWidth);
             SetSetting("LastWindowHeight", this.lastWindowHeight);
             SetSetting("LastWindowLeft", this.lastWindowLeft);
@@ -389,8 +405,8 @@ namespace FolderMediaPlayer
             SetSetting("OnScreenPlaybackTimeDisplay", this.OnScreenPlaybackTimeDisplay);
             SetSetting("OnScreenVolumeDisplay", this.OnScreenVolumeDisplay);
             SetSetting("OnScreenSpeedDisplay", this.OnScreenSpeedDisplay);
-            SetSetting("PlaybackBehavierNLoopN", this.PlaybackBehavierNLoopN);
-            SetSetting("PlaybackEndBehavier", this.PlaybackEndBehavier);
+            SetSetting("PlaybackBehaviorNLoopN", this.PlaybackBehaviorNLoopN);
+            SetSetting("PlaybackEndBehavior", this.PlaybackEndBehavior);
             SetSetting("OnScreenTitleDisplay", this.OnScreenTitleDisplay);
             SetSetting("PlaybackVolume", this.PlaybackVolume);
             SetSetting("LastVolume", this.LastVolume);
@@ -398,7 +414,6 @@ namespace FolderMediaPlayer
             SetSetting("MouseCursor", this.MouseCursor);
 
             Properties.Settings.Default.Save();
-
             ShortcutKey.WriteXML();
             
             this.propertyChangeCounter = 0;
@@ -431,7 +446,7 @@ public enum ResizeMode
     Screen,
 }
 
-public enum PlaybackBehavier
+public enum PlaybackBehavior
 {
     Stop,
     SingleRepeat,
@@ -439,13 +454,14 @@ public enum PlaybackBehavier
     NLoop,
 }
 
-public enum MouseBehavier
+public enum MouseBehavior
 {
     Volume,
     Speed,
     JumpSmall,
     JumpMedium,
     JumpLarge,
+    ChangeMedia,
 }
 
 public enum PlaybackVolume

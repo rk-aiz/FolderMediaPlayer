@@ -194,12 +194,12 @@ namespace FolderMediaPlayer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("NextMedia")]
-        public string PlaybackEndBehavier {
+        public string PlaybackEndBehavior {
             get {
-                return ((string)(this["PlaybackEndBehavier"]));
+                return ((string)(this["PlaybackEndBehavior"]));
             }
             set {
-                this["PlaybackEndBehavier"] = value;
+                this["PlaybackEndBehavior"] = value;
             }
         }
         
@@ -230,12 +230,12 @@ namespace FolderMediaPlayer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Volume")]
-        public string MouseWheelBehavier {
+        public string MouseWheelBehavior {
             get {
-                return ((string)(this["MouseWheelBehavier"]));
+                return ((string)(this["MouseWheelBehavior"]));
             }
             set {
-                this["MouseWheelBehavier"] = value;
+                this["MouseWheelBehavior"] = value;
             }
         }
         
@@ -296,6 +296,18 @@ namespace FolderMediaPlayer.Properties {
             }
             set {
                 this["MouseCursor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ChangeMedia")]
+        public string MouseXButtonBehavior {
+            get {
+                return ((string)(this["MouseXButtonBehavior"]));
+            }
+            set {
+                this["MouseXButtonBehavior"] = value;
             }
         }
     }

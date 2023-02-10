@@ -44,7 +44,7 @@
     <Setting Name="OnScreenVolumeDisplay" Type="System.String" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="PlaybackEndBehavier" Type="System.String" Scope="User">
+    <Setting Name="PlaybackEndBehavior" Type="System.String" Scope="User">
       <Value Profile="(Default)">NextMedia</Value>
     </Setting>
     <Setting Name="PlaybackBehavierNLoopN" Type="System.String" Scope="User">
@@ -53,7 +53,7 @@
     <Setting Name="OnScreenTitleDisplay" Type="System.String" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="MouseWheelBehavier" Type="System.String" Scope="User">
+    <Setting Name="MouseWheelBehavior" Type="System.String" Scope="User">
       <Value Profile="(Default)">Volume</Value>
     </Setting>
     <Setting Name="PlaybackVolume" Type="System.String" Scope="User">
@@ -70,6 +70,9 @@
     </Setting>
     <Setting Name="MouseCursor" Type="System.String" Scope="User">
       <Value Profile="(Default)">AutoHide</Value>
+    </Setting>
+    <Setting Name="MouseXButtonBehavior" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ChangeMedia</Value>
     </Setting>
   </Settings>
 </SettingsFile>

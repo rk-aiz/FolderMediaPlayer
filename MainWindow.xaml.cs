@@ -84,13 +84,6 @@ namespace FolderMediaPlayer
                 Mode = BindingMode.OneWay,
             });
 
-            if (this.settings.RestoreWindowPosition)
-            {
-                this.WindowStartupLocation = WindowStartupLocation.Manual;
-                this.Left = this.settings.lastWindowLeft;
-                this.Top = this.settings.lastWindowTop;
-            }
-
             this.mediaHelper.MediaSizeChanged += (sender, e) =>
             {
                 this.Width = this.mediaHelper.mediaWidth;
@@ -103,10 +96,20 @@ namespace FolderMediaPlayer
             };
         }
 
-        private void Window_SourceInitialized(object sender, EventArgs ea)
+        protected override void OnSourceInitialized(EventArgs e)
         {
+            base.OnSourceInitialized(e);
+
             this.settings.Load();
             this.mediaHelper.mediaVolume = this.settings.LastVolume;
+
+            if (this.settings.RestoreWindowPosition)
+            {
+                this.WindowStartupLocation = WindowStartupLocation.Manual;
+                this.Left = this.settings.lastWindowLeft;
+                this.Top = this.settings.lastWindowTop;
+            }
+
             switch (this.settings.StartupWindowMode)
             {
                 case WindowMode.Default:
@@ -171,7 +174,7 @@ namespace FolderMediaPlayer
         }
 
         private static void CursorMode_PropertyChanged(DependencyObject d,
-    DependencyPropertyChangedEventArgs e)
+            DependencyPropertyChangedEventArgs e)
         {
             MainWindow source = (MainWindow)d;
             switch ((MouseCursorMode)e.NewValue)
@@ -209,13 +212,12 @@ namespace FolderMediaPlayer
 
         private bool SysCommandProc(IntPtr id)
         {
-            switch ((int)id) // Option Window
+            switch ((int)id)
             {
                 case MIIM_ID_OPTION:
                     OptionWindow optionWindow = new OptionWindow();
                     optionWindow.Owner = this;
                     bool? result = optionWindow.ShowDialog();
-
 
                     Debug.WriteLine("ShowDialog result : {0}",
                         result);
@@ -330,56 +332,94 @@ namespace FolderMediaPlayer
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            this.settings.lastWindowWidth = this.Width;
-            this.settings.lastWindowHeight = this.Height;
-            this.settings.lastWindowLeft = this.Left;
-            this.settings.lastWindowTop = this.Top;
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.settings.lastWindowWidth = this.RestoreBounds.Width;
+                this.settings.lastWindowHeight = this.RestoreBounds.Height;
+                this.settings.lastWindowLeft = this.RestoreLeft;
+                this.settings.lastWindowTop = this.RestoreTop;
+            }
+            else
+            {
+                this.settings.lastWindowWidth = this.Width;
+                this.settings.lastWindowHeight = this.Height;
+                this.settings.lastWindowLeft = this.Left;
+                this.settings.lastWindowTop = this.Top;
+            }
             this.settings.Save();
             mediaHelper.playing = false;
+
             base.OnClosing(e);
         }
 
         private void MainWindow_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            MouseBehavierProc(this.settings.MouseWheelBehavier, e.Delta > 0);
+            MouseBehaviorProc(this.settings.MouseWheelBehavior, e.Delta > 0);
         }
 
-        private void MouseBehavierProc(MouseBehavier behavier, bool mode)
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            switch (behavier)
+            switch (e.ChangedButton)
             {
-                case MouseBehavier.Volume:
+                case MouseButton.Right:
+                    ShowSystemMenu();
+                    break;
+                case MouseButton.XButton1:
+                    MouseBehaviorProc(this.settings.MouseXButtonBehavior, false);
+                    break;
+                case MouseButton.XButton2:
+                    MouseBehaviorProc(this.settings.MouseXButtonBehavior, true);
+                    break;
+                default:
+                    base.OnMouseUp(e);
+                    break;
+            }
+        }
+
+        private void MouseBehaviorProc(MouseBehavior Behavior, bool mode)
+        {
+            switch (Behavior)
+            {
+                case MouseBehavior.Volume:
                     this.mediaHelper.mediaVolume +=
                         this.mediaHelper.changeVolumeStep * (mode ? 1 : -1);
                     break;
-                case MouseBehavier.Speed:
+                case MouseBehavior.Speed:
                     this.mediaHelper.mediaSpeed +=
                         this.mediaHelper.changeSpeedStep * (mode ? 1 : -1);
                     break;
-                case MouseBehavier.JumpLarge:
+                case MouseBehavior.JumpLarge:
                     if (mode)
                         this.mediaHelper.JumpBackwardLargeStep();
                     else
                         this.mediaHelper.JumpForwardLargeStep();
                     break;
-                case MouseBehavier.JumpMedium:
+                case MouseBehavior.JumpMedium:
                     if (mode)
                         this.mediaHelper.JumpBackwardMediumStep();
                     else
                         this.mediaHelper.JumpForwardMediumStep();
                     break;
-                case MouseBehavier.JumpSmall:
+                case MouseBehavior.JumpSmall:
                     if (mode)
                         this.mediaHelper.JumpForwardSmallStep();
                     else
                         this.mediaHelper.JumpBackwardSmallStep();
                     break;
+                case MouseBehavior.ChangeMedia:
+                    if (mode)
+                        this.mediaHelper.NextMedia();
+                    else
+                        this.mediaHelper.PreviousMedia();
+                    break;
             }
         }
 
-        private void MainWindow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
         {
             ToggleWindowState();
+
+            base.OnMouseDoubleClick(e);
         }
 
         public void ToggleWindowState()
@@ -426,16 +466,12 @@ namespace FolderMediaPlayer
                     new IntPtr(command), IntPtr.Zero);
         }
 
-        private void Window_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            ShowSystemMenu();
-            e.Handled = true;
-        }
-
         private double RestoreLeft;
         private double RestoreTop;
-        private void Window_StateChanged(object sender, EventArgs e)
+        protected override void OnStateChanged(EventArgs e)
         {
+            base.OnStateChanged(e);
+
             if (WindowState.Maximized == this.WindowState)
             {
                 this.RestoreLeft = this.RestoreBounds.Left;

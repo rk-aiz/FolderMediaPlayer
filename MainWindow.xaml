@@ -9,14 +9,10 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         Background="Black"
-        MouseWheel="MainWindow_MouseWheel"
         SnapsToDevicePixels="True"
         AllowDrop="True"
+        MouseWheel="MainWindow_MouseWheel"
         Drop="Window_Drop"
-        MouseRightButtonUp="Window_MouseRightButtonUp"
-        MouseDoubleClick="MainWindow_MouseDoubleClick"
-        StateChanged="Window_StateChanged"
-        SourceInitialized="Window_SourceInitialized"
         >
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0"

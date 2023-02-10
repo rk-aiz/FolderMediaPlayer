@@ -237,32 +237,32 @@
                     <StackPanel>
                         <RadioButton
                             GroupName="PlaybackBehavior"
-                            IsChecked="{Binding PlaybackEndBehavier,
+                            IsChecked="{Binding PlaybackEndBehavior,
                                 Converter={StaticResource IsCheckedConverter},
                                 ConverterParameter=Stop}"
                             Content="{DynamicResource stringStop}"/>
                         <RadioButton
                             GroupName="PlaybackBehavior"
-                            IsChecked="{Binding PlaybackEndBehavier,
+                            IsChecked="{Binding PlaybackEndBehavior,
                                 Converter={StaticResource IsCheckedConverter},
                                 ConverterParameter=NextMedia}"
                             Content="{DynamicResource stringNextMedia}"/>
                         <RadioButton
                             GroupName="PlaybackBehavior"
-                            IsChecked="{Binding PlaybackEndBehavier,
+                            IsChecked="{Binding PlaybackEndBehavior,
                                 Converter={StaticResource IsCheckedConverter},
                                 ConverterParameter=SingleRepeat}"
                             Content="{DynamicResource stringSingleRepeat}"/>
 
                         <DockPanel>
                             <TextBox DockPanel.Dock="Right"
-                                Text="{Binding PlaybackBehavierNLoopN,
+                                Text="{Binding PlaybackBehaviorNLoopN,
                                 Mode=TwoWay,
                                 UpdateSourceTrigger=PropertyChanged,
                                 Converter={StaticResource IntToTextConverter}}"/>
                             <RadioButton DockPanel.Dock="Left"
                                 GroupName="PlaybackBehavior"
-                                IsChecked="{Binding PlaybackEndBehavier,
+                                IsChecked="{Binding PlaybackEndBehavior,
                                     Converter={StaticResource IsCheckedConverter},
                                     ConverterParameter=NLoop}"
                                 Content="{DynamicResource stringNLoop}" />
@@ -449,43 +449,94 @@
             Visibility="{Binding IsSelected,
                 ElementName=OptionItemMouse,
                 Converter={StaticResource VisibilityConverter}}">
+            <GroupBox.Resources>
+                <Style TargetType="{x:Type ComboBox}">
+                    <Setter Property="MinWidth" Value="250"/>
+                    <Setter Property="Margin" Value="5, 0"/>
+                </Style>
+                <Style
+                    x:Key="ComboBoxTitle"
+                    TargetType="{x:Type TextBlock}"
+                    >
+                    <Setter Property="Width" Value="175"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="TextAlignment" Value="Right"/>
+                    <Setter Property="Margin" Value="5, 0"/>
+                </Style>
+                <Style TargetType="{x:Type StackPanel}">
+                    <Style.Triggers>
+                        <Trigger Property="Orientation" Value="Horizontal">
+                            <Setter Property="Margin" Value="0, 5"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </GroupBox.Resources>
             <StackPanel>
-                
+
+                <GroupBox Header="{DynamicResource stringMouseButtonBehavior}">
+                    <StackPanel>
+                        <!-- Mouse XButton Setting -->
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Style="{StaticResource ComboBoxTitle}"
+                                Text="{DynamicResource stringMouseSideButton}"/>
+                            <ComboBox
+                                SelectedItem="{Binding MouseXButtonBehavior}"
+                                ItemsSource="{Binding EnumMouseBehavior,
+                                Mode=OneWay}">
+                            </ComboBox>
+                        </StackPanel>
+
+                        <!-- Mouse Wheel Setting -->
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Style="{StaticResource ComboBoxTitle}"
+                                Text="{DynamicResource stringMouseWheel}"/>
+                            <ComboBox
+                                SelectedItem="{Binding MouseWheelBehavior}"
+                                ItemsSource="{Binding EnumMouseBehavior,
+                                Mode=OneWay}">
+                            </ComboBox>
+                        </StackPanel>
+                        
+                    </StackPanel>
+                </GroupBox>
+
                 <!-- Mouse Wheel Setting -->
-                <GroupBox Header="{DynamicResource stringMouseWheel}">
+                <!--<GroupBox Header="{DynamicResource stringMouseWheel}">
                     <StackPanel>
                         <RadioButton
                                 GroupName="MouseWheel"
-                                IsChecked="{Binding MouseWheelBehavier,
+                                IsChecked="{Binding MouseWheelBehavior,
                                     Converter={StaticResource IsCheckedConverter},
                                     ConverterParameter=Volume}"
                                 Content="{DynamicResource stringVolumeControl}"/>
                         <RadioButton
                             GroupName="MouseWheel"
-                            IsChecked="{Binding MouseWheelBehavier,
+                            IsChecked="{Binding MouseWheelBehavior,
                                 Converter={StaticResource IsCheckedConverter},
                                 ConverterParameter=Speed}"
                             Content="{DynamicResource stringSpeedControl}"/>
                         <RadioButton
                                 GroupName="MouseWheel"
-                                IsChecked="{Binding MouseWheelBehavier,
+                                IsChecked="{Binding MouseWheelBehavior,
                                     Converter={StaticResource IsCheckedConverter},
                                     ConverterParameter=JumpSmall}"
                                 Content="{DynamicResource stringJumpSmallStep}" />
                         <RadioButton
                                 GroupName="MouseWheel"
-                                IsChecked="{Binding MouseWheelBehavier,
+                                IsChecked="{Binding MouseWheelBehavior,
                                     Converter={StaticResource IsCheckedConverter},
                                     ConverterParameter=JumpMedium}"
                                 Content="{DynamicResource stringJumpMediumStep}" />
                         <RadioButton
                                 GroupName="MouseWheel"
-                                IsChecked="{Binding MouseWheelBehavier,
+                                IsChecked="{Binding MouseWheelBehavior,
                                     Converter={StaticResource IsCheckedConverter},
                                     ConverterParameter=JumpLarge}"
                                 Content="{DynamicResource stringJumpLargeStep}" />
                     </StackPanel>
-                </GroupBox>
+                </GroupBox>-->
                 
                 <!-- Mouse Cursor Setting -->
                 <GroupBox Header="{DynamicResource stringMouseCursorDisplayMode}">
