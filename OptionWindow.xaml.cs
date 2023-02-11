@@ -133,5 +133,14 @@ namespace FolderMediaPlayer
         {
             this.settings.ResetShortcutKeyEntry(this.helper.index);
         }
+
+        private void ShortcutKeyResetAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.settings.ShortcutKeyCollection.Clear();
+            foreach (ShortcutKeyEntry entry in ShortcutKey.GetDefaultXml())
+            {
+                this.settings.ShortcutKeyCollection.Add(entry);
+            }
+        }
     }
 }

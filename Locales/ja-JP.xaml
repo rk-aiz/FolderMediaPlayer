@@ -16,7 +16,7 @@
     <sys:String x:Key="stringVolumeControl">音量調節</sys:String>
     <sys:String x:Key="stringMouseWheel">マウスホイール</sys:String>
     <sys:String x:Key="stringNewItem">新規</sys:String>
-    <sys:String x:Key="stringReset All">全てリセット</sys:String>
+    <sys:String x:Key="stringResetAll">全てリセット</sys:String>
     <sys:String x:Key="stringReset">リセット</sys:String>
     <sys:String x:Key="stringChange">変更</sys:String>
     <sys:String x:Key="stringIndex">Index</sys:String>
@@ -64,4 +64,7 @@
     <sys:String x:Key="stringOpenFile">ファイルを開く...</sys:String>
     <sys:String x:Key="stringMouseButtonBehavior">マウスボタンの挙動</sys:String>
     <sys:String x:Key="stringMouseSideButton">マウスサイドボタン</sys:String>
+
+    <sys:String x:Key="formatCommand">コマンド : {0}</sys:String>
+    
 </ResourceDictionary>

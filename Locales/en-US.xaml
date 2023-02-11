@@ -66,4 +66,6 @@
     <sys:String x:Key="stringMouseButtonBehavior">Mouse Button Behavior</sys:String>
     <sys:String x:Key="stringMouseSideButton">Mouse Side Button</sys:String>
 
+    <sys:String x:Key="formatCommand">Command : {0}</sys:String>
+
 </ResourceDictionary>

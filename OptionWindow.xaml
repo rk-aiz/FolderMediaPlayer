@@ -28,10 +28,11 @@
             M 0, 0.5 L 19.5, 20 L 0, 39.5 L 0.5, 40 L 20, 20.5 L 39.5, 40 L 40, 39.5 L 20.5, 20 L 40, 0.5 L 39.5, 0 L 20, 19.5 L 0.5, 0 Z
         </Geometry>
 
-        <Style TargetType="Button">
+        <Style TargetType="{x:Type Button}">
             <Setter Property="Margin" Value="0, 0, 10, 5"/>
-            <Setter Property="Width" Value="90"/>
+            <Setter Property="Width" Value="85"/>
             <Setter Property="Height" Value="25"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
 
@@ -311,7 +312,11 @@
                     <Setter Property="Padding" Value="5"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
                 </Style>
-                
+
+                <Style TargetType="{x:Type DockPanel}">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+
             </GroupBox.Resources>
             <Grid>
                 <Grid.RowDefinitions>
@@ -384,8 +389,16 @@
                         Width="150"
                         Text="{Binding index, StringFormat=Index : {0}}"
                         />
+                    <Button
+                        DockPanel.Dock="Right"
+                        Click="ShortcutKeyResetAllButton_Click"
+                        Content="{DynamicResource stringResetAll}"
+                        />
                     <TextBlock DockPanel.Dock="Right"
-                        Text="{Binding command, StringFormat=Command : {0}}"
+                        Text="{local:CultureAwareBinding
+                            Path=command,
+                            Converter={StaticResource TranslateConverter},
+                            ConverterParameter={StaticResource formatCommand}}"
                         />
                 </DockPanel>
 
@@ -400,13 +413,13 @@
                     </DockPanel.Resources>
                     <Button
                         DockPanel.Dock="Right"
-                        Click="ShortcutKeyChangeButton_Click"
-                        Content="{DynamicResource stringChange}"
+                        Click="ShortcutKeyResetButton_Click"
+                        Content="{DynamicResource stringReset}"
                         />
                     <Button
                         DockPanel.Dock="Right"
-                        Click="ShortcutKeyResetButton_Click"
-                        Content="{DynamicResource stringReset}"
+                        Click="ShortcutKeyChangeButton_Click"
+                        Content="{DynamicResource stringChange}"
                         />
                     <CheckBox DockPanel.Dock="Left"
                         IsChecked="{Binding modCtrl}"
@@ -423,7 +436,7 @@
                     <TextBox DockPanel.Dock="Left"
                         PreviewKeyDown="KeyboardInputBox_PreviewKeyDown"
                         Width="200"
-                        FontSize="20"
+                        FontSize="17"
                         FontWeight="Bold"
                         Margin="10, 0"
                         Padding="0"

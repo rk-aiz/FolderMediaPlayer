@@ -216,7 +216,7 @@ namespace FolderMediaPlayer
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || value.ToString() == String.Empty)
+            if (String.IsNullOrEmpty((string)value))
                 return Binding.DoNothing;
 
             Debug.WriteLine("Translater culture : {0}", culture.Name);
@@ -227,15 +227,19 @@ namespace FolderMediaPlayer
                 translatedValue = Properties.Resources.ResourceManager.GetString(value.ToString(), culture);
             }
             catch
-            { }
+            {
+                translatedValue = value.ToString();
+            }
             
-            if (translatedValue != String.Empty)
+
+            if (String.IsNullOrEmpty((string)parameter))
             {
                 return translatedValue;
             }
             else
             {
-                return value.ToString();
+                return String.Format(parameter.ToString(), translatedValue);
+                //Debug.WriteLine("parameter {0}", parameter.ToString());
             }
         }
 
