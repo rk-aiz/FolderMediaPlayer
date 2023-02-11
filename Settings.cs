@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using System.Collections.Specialized;
 using System.Collections.ObjectModel;
+using FolderMediaPlayer;
 
 namespace FolderMediaPlayer
 {
@@ -454,13 +455,26 @@ public enum PlaybackBehavior
     NLoop,
 }
 
+[TypeConverter(typeof(EnumDescriptionTypeConverter))]
 public enum MouseBehavior
 {
+    [LocalizedDescription("Volume",
+        typeof(FolderMediaPlayer.Properties.EnumResources))]
     Volume,
+    [LocalizedDescription("Speed",
+        typeof(FolderMediaPlayer.Properties.EnumResources))]
     Speed,
+    [LocalizedDescription("JumpSmall",
+        typeof(FolderMediaPlayer.Properties.EnumResources))]
     JumpSmall,
+    [LocalizedDescription("JumpMedium",
+        typeof(FolderMediaPlayer.Properties.EnumResources))]
     JumpMedium,
+    [LocalizedDescription("JumpLarge",
+        typeof(FolderMediaPlayer.Properties.EnumResources))]
     JumpLarge,
+    [LocalizedDescription("ChangeMedia",
+        typeof(FolderMediaPlayer.Properties.EnumResources))]
     ChangeMedia,
 }
 
