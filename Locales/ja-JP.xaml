@@ -66,5 +66,6 @@
     <sys:String x:Key="stringMouseSideButton">マウスサイドボタン</sys:String>
 
     <sys:String x:Key="formatCommand">コマンド : {0}</sys:String>
+    <sys:String x:Key="stringKeyHasBeenDuplicated">キーが重複しています。</sys:String>
     
 </ResourceDictionary>

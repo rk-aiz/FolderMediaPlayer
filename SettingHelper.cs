@@ -7,10 +7,12 @@ using System.Windows.Input;
 using System.Runtime.CompilerServices;
 using System.Windows.Interop;
 using System.Diagnostics;
+using System.Xml.Linq;
+using System.ComponentModel.DataAnnotations;
 
 namespace FolderMediaPlayer
 {
-    public class SettingHelper : INotifyPropertyChanged
+    public class SettingHelper : INotifyPropertyChanged, IDataErrorInfo
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -18,7 +20,11 @@ namespace FolderMediaPlayer
         public Key key
         {
             get { return this._key; }
-            set { this._key = value; OnPropertyChanged(); }
+            set
+            {
+                this._key = value;
+                OnPropertyChanged();
+            }
         }
 
         private int _index;
@@ -68,6 +74,22 @@ namespace FolderMediaPlayer
         {
             get { return this._modShift; }
             set { this._modShift = value; OnPropertyChanged(); }
+        }
+
+        public string Error
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                return null;
+            }
         }
 
         private void OnPropertyChanged([CallerMemberName] String propertyName = "")

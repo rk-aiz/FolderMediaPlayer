@@ -97,6 +97,33 @@ namespace FolderMediaPlayer.Properties {
         }
         
         /// <summary>
+        ///   Numeric value only に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string NumericOnly {
+            get {
+                return ResourceManager.GetString("NumericOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Positive integer only に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PositiveIntegerOnly {
+            get {
+                return ResourceManager.GetString("PositiveIntegerOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   enter a number between 1 and 1000 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ScalingValueOnly {
+            get {
+                return ResourceManager.GetString("ScalingValueOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Speed Up/Down に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Speed {
@@ -111,6 +138,15 @@ namespace FolderMediaPlayer.Properties {
         public static string Volume {
             get {
                 return ResourceManager.GetString("Volume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   enter a number between 0 and 100 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string VolumeRuleMessage {
+            get {
+                return ResourceManager.GetString("VolumeRuleMessage", resourceCulture);
             }
         }
     }

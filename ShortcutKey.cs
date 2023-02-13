@@ -76,23 +76,31 @@ namespace FolderMediaPlayer
 
             Debug.WriteLine("Key : {0} Mod : {1}", key, modifiers);
 
+            ShortcutKeyEntry entry = GetEntryByKey(key, modifiers);
+            try
+            {
+                object target = commandTargetObjects[entry.targetName];
+                target.GetType().InvokeMember(entry.methodName,
+                    BindingFlags.InvokeMethod, null, target, null);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+
+        public static ShortcutKeyEntry GetEntryByKey(Key key, ModifierKeys modifiers)
+        {
             foreach (ShortcutKeyEntry entry in EntryList)
             {
                 if (entry.key == Key.None)
                     continue;
 
                 if (entry.key == key && entry.modifiers == modifiers)
-                    try
-                    {
-                        object target = commandTargetObjects[entry.targetName];
-                        target.GetType().InvokeMember(entry.methodName,
-                            BindingFlags.InvokeMethod, null, target, null);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.WriteLine(e);
-                    }
+                    return entry;
             }
+
+            return null;
         }
 
         public static void Add(string name, string methodName, string targetName, Key keys = Key.None, ModifierKeys modifiers = ModifierKeys.None, string description = "")

@@ -129,10 +129,22 @@
   <data name="JumpSmall" xml:space="preserve">
     <value>ジャンプ（小）</value>
   </data>
+  <data name="NumericOnly" xml:space="preserve">
+    <value>数値のみ</value>
+  </data>
+  <data name="PositiveIntegerOnly" xml:space="preserve">
+    <value>正の整数のみ</value>
+  </data>
+  <data name="ScalingValueOnly" xml:space="preserve">
+    <value>1～1000までの数値</value>
+  </data>
   <data name="Speed" xml:space="preserve">
     <value>速度変更</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>音量変更</value>
+  </data>
+  <data name="VolumeRuleMessage" xml:space="preserve">
+    <value>1～100までの数値</value>
   </data>
 </root>

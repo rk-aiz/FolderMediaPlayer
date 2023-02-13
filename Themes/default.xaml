@@ -13,4 +13,5 @@
     <SolidColorBrush x:Key="brushKeyboardSettingTextBlockBackground" Color="#ffffff" />
     <SolidColorBrush x:Key="brushKeyboardSettingTextBlockBorder" Color="#c0c0c0" />
     <SolidColorBrush x:Key="brushOSDLabelBackground" Color="Transparent"/>
+    <SolidColorBrush x:Key="brushWarningBackground" Color="#FF9966"/>
 </ResourceDictionary>

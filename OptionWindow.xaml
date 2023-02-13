@@ -33,6 +33,14 @@
             <Setter Property="Width" Value="85"/>
             <Setter Property="Height" Value="25"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="local:OptionWindow.HasWarning" Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding Path=(local:OptionWindow.Warning),
+                                RelativeSource={RelativeSource Self}}"/>
+                    <Setter Property="Background" Value="{StaticResource brushWarningBackground}"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -78,6 +86,15 @@
                 <Setter Property="Padding" Value="5, 0"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                <Style.Triggers>
+                    <Trigger Property="Validation.HasError" Value="true">
+                        <Setter Property="ToolTipService.ToolTip" Value="{
+                            Binding Path=(Validation.Errors)[0].ErrorContent,
+                            RelativeSource={RelativeSource Self}}"/>
+                        <Setter Property="ToolTip.IsOpen" Value="True"/>
+                        <Setter Property="Background" Value="#FF8888"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
         </Grid.Resources>
@@ -132,19 +149,36 @@
                                 ConverterParameter=Memorized}"
                             Content="{DynamicResource stringMemorizedWindowSizeAtExit}"/>
                         <DockPanel>
-                            <TextBox DockPanel.Dock="Right"
-                                Text="{Binding specifiedWindowWidth,
-                                Mode=TwoWay,
-                                UpdateSourceTrigger=PropertyChanged,
-                                Converter={StaticResource DoubleToTextConverter}}"/>
+                            <TextBox DockPanel.Dock="Right">
+                                <TextBox.Text>
+                                    <Binding Path="specifiedWindowHeight"
+                                             Mode="TwoWay"
+                                             UpdateSourceTrigger="PropertyChanged"
+                                             Converter="{StaticResource DoubleToTextConverter}">
+                                        <Binding.ValidationRules>
+                                            <local:SizeValueRule/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <Path DockPanel.Dock="Right"
                                   Width="8" Height="8"
                                   Data="{StaticResource geometryCross}"/>
-                            <TextBox DockPanel.Dock="Right"
-                                Text="{Binding specifiedWindowHeight,
-                                Mode=TwoWay,
-                                UpdateSourceTrigger=PropertyChanged,
-                                Converter={StaticResource DoubleToTextConverter}}"/>
+                            <TextBox DockPanel.Dock="Right">
+                                <TextBox.Text>
+                                    <Binding Path="specifiedWindowWidth"
+                                             Mode="TwoWay"
+                                             UpdateSourceTrigger="PropertyChanged"
+                                             ValidatesOnExceptions="True"
+                                             Converter="{StaticResource DoubleToTextConverter}">
+                                        <Binding.ValidationRules>
+                                            <local:SizeValueRule/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                    
+                                </TextBox.Text>
+                            </TextBox>
+
                             <RadioButton DockPanel.Dock="Left"
                                 GroupName="StartupWindowMode"
                                 IsChecked="{Binding StartupWindowMode,
@@ -166,11 +200,18 @@
                         <DockPanel>
                             <TextBlock DockPanel.Dock="Right"
                                 Text="%"/>
-                            <TextBox DockPanel.Dock="Right"
-                                Text="{Binding AdjustVideoSizeScaling,
-                                Mode=TwoWay,
-                                UpdateSourceTrigger=PropertyChanged,
-                                Converter={StaticResource DoubleToTextConverter}}"/>
+                            <TextBox DockPanel.Dock="Right">
+                                <TextBox.Text>
+                                    <Binding Path="AdjustVideoSizeScaling"
+                                             Mode="TwoWay"
+                                             UpdateSourceTrigger="PropertyChanged"
+                                             Converter="{StaticResource DoubleToTextConverter}">
+                                        <Binding.ValidationRules>
+                                            <local:ScalingValueRule/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <RadioButton DockPanel.Dock="Left"
                                 IsChecked="{Binding PlaybackResizeMode,
                                 Converter={StaticResource IsCheckedConverter},
@@ -180,11 +221,18 @@
                         <DockPanel>
                             <TextBlock DockPanel.Dock="Right"
                                 Text="%"/>
-                            <TextBox DockPanel.Dock="Right"
-                                Text="{Binding FitToScreenSizeScaling,
-                                Mode=TwoWay,
-                                UpdateSourceTrigger=PropertyChanged,
-                                Converter={StaticResource DoubleToTextConverter}}"/>
+                            <TextBox DockPanel.Dock="Right">
+                                <TextBox.Text>
+                                    <Binding Path="FitToScreenSizeScaling"
+                                             Mode="TwoWay"
+                                             UpdateSourceTrigger="PropertyChanged"
+                                             Converter="{StaticResource DoubleToTextConverter}">
+                                        <Binding.ValidationRules>
+                                            <local:ScalingValueRule/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <RadioButton DockPanel.Dock="Left"
                                 GroupName="PlaybackResizeMode"
                                 IsChecked="{Binding PlaybackResizeMode,
@@ -256,11 +304,18 @@
                             Content="{DynamicResource stringSingleRepeat}"/>
 
                         <DockPanel>
-                            <TextBox DockPanel.Dock="Right"
-                                Text="{Binding PlaybackBehaviorNLoopN,
-                                Mode=TwoWay,
-                                UpdateSourceTrigger=PropertyChanged,
-                                Converter={StaticResource IntToTextConverter}}"/>
+                            <TextBox DockPanel.Dock="Right">
+                                <TextBox.Text>
+                                    <Binding Path="PlaybackBehaviorNLoopN"
+                                             Mode="TwoWay"
+                                             UpdateSourceTrigger="PropertyChanged"
+                                             Converter="{StaticResource IntToTextConverter}">
+                                        <Binding.ValidationRules>
+                                            <local:PositiveIntegerRule/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <RadioButton DockPanel.Dock="Left"
                                 GroupName="PlaybackBehavior"
                                 IsChecked="{Binding PlaybackEndBehavior,
@@ -282,11 +337,18 @@
                             Content="{DynamicResource stringNoChange}"/>
 
                         <DockPanel>
-                            <TextBox DockPanel.Dock="Right"
-                                Text="{Binding SpecifiedVolume,
-                                Mode=TwoWay,
-                                UpdateSourceTrigger=PropertyChanged,
-                                Converter={StaticResource PercentageConverter}}"/>
+                            <TextBox DockPanel.Dock="Right">
+                                <TextBox.Text>
+                                    <Binding Path="SpecifiedVolume"
+                                             Mode="TwoWay"
+                                             UpdateSourceTrigger="PropertyChanged"
+                                             Converter="{StaticResource PercentageConverter}">
+                                        <Binding.ValidationRules>
+                                            <local:VolumeValueRule/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <RadioButton DockPanel.Dock="Left"
                                 GroupName="StartPlaybackVolume"
                                 IsChecked="{Binding PlaybackVolume,
@@ -394,12 +456,15 @@
                         Click="ShortcutKeyResetAllButton_Click"
                         Content="{DynamicResource stringResetAll}"
                         />
-                    <TextBlock DockPanel.Dock="Right"
-                        Text="{local:CultureAwareBinding
-                            Path=command,
-                            Converter={StaticResource TranslateConverter},
-                            ConverterParameter={StaticResource formatCommand}}"
-                        />
+                    <TextBlock DockPanel.Dock="Right">
+                        <TextBlock.Text>
+                            <local:CultureAwareBinding Path="command"
+                                Converter="{StaticResource TranslateConverter}"
+                                ConverterParameter="{StaticResource formatCommand}"
+                                >
+                            </local:CultureAwareBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
                 </DockPanel>
 
                 <DockPanel Grid.Row="2"
@@ -417,6 +482,7 @@
                         Content="{DynamicResource stringReset}"
                         />
                     <Button
+                        x:Name="ShortcutKeyChangeButton"
                         DockPanel.Dock="Right"
                         Click="ShortcutKeyChangeButton_Click"
                         Content="{DynamicResource stringChange}"
@@ -443,15 +509,15 @@
                         HorizontalAlignment="Left"
                         TextAlignment="Center"
                         BorderThickness="2"
-                        BorderBrush="{DynamicResource brushKeyboardTextForeground}"
                         Cursor="Hand"
                         CaretBrush="Transparent"
-                        Foreground="{DynamicResource brushKeyboardInputBoxForeground}"
-                        Background="{DynamicResource brushKeyboardInputBoxBackground}"
+                        
+
                         Text="{Binding Path=helper.key,
                             ElementName=optionWindow,
                             Converter={StaticResource KeyToStringConverter}}"
-                       />
+                    >
+                    </TextBox>
                 </DockPanel>
             </Grid>
         </GroupBox>

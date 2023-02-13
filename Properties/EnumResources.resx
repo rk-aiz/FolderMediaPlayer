@@ -129,10 +129,22 @@
   <data name="JumpSmall" xml:space="preserve">
     <value>Jump (Small)</value>
   </data>
+  <data name="NumericOnly" xml:space="preserve">
+    <value>Numeric value only</value>
+  </data>
+  <data name="PositiveIntegerOnly" xml:space="preserve">
+    <value>Positive integer only</value>
+  </data>
+  <data name="ScalingValueOnly" xml:space="preserve">
+    <value>enter a number between 1 and 1000</value>
+  </data>
   <data name="Speed" xml:space="preserve">
     <value>Speed Up/Down</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>Volume Up/Down</value>
+  </data>
+  <data name="VolumeRuleMessage" xml:space="preserve">
+    <value>enter a number between 0 and 100</value>
   </data>
 </root>

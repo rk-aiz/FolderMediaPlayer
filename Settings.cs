@@ -228,6 +228,22 @@ namespace FolderMediaPlayer
             }
         }
 
+        public List<ShortcutKeyEntry> GetEntriesByKey(Key key, ModifierKeys modifiers)
+        {
+            List<ShortcutKeyEntry> entries = new List<ShortcutKeyEntry>();
+
+            foreach (ShortcutKeyEntry entry in this.ShortcutKeyCollection)
+            {
+                if (entry.key == Key.None)
+                    continue;
+
+                if (entry.key == key && entry.modifiers == modifiers)
+                    entries.Add(entry);
+            }
+
+            return entries;
+        }
+
         public void ResetShortcutKeyEntry(int index)
         {
             for (int i = 0; i < this.ShortcutKeyCollection.Count; i++)
