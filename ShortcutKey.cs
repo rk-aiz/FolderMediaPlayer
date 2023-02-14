@@ -77,6 +77,9 @@ namespace FolderMediaPlayer
             Debug.WriteLine("Key : {0} Mod : {1}", key, modifiers);
 
             ShortcutKeyEntry entry = GetEntryByKey(key, modifiers);
+            if (entry == null)
+                return;
+            
             try
             {
                 object target = commandTargetObjects[entry.targetName];

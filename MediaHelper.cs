@@ -195,6 +195,7 @@ namespace FolderMediaPlayer
 
         private void OnMediaSourceChanged()
         {
+            this.Scrubbable = false;
             this.mediaClock = new MediaTimeline(new Uri(this.mediaSource)).CreateClock();
             this.mediaClock.Completed += (sender, e) =>
             {
@@ -227,8 +228,17 @@ namespace FolderMediaPlayer
             get { return (this.mediaClock.CurrentTime ?? TimeSpan.Zero); }
         }
 
+        private bool _scrubbable = false;
+        public bool Scrubbable
+        {
+            get { return this._scrubbable; }
+            set { this._scrubbable = value; NotifyPropertyChanged(); }
+        }
+
         private void PlaybackTimerMethod(object sender, EventArgs e)
         {
+            Debug.WriteLine("Now Playing {0} : {1}", this.mediaSource, this.mediaPlaybackTime);
+
             NotifyPropertyChanged("mediaPlaybackTime");
             NotifyPropertyChanged("mediaDuration");
         }
@@ -309,7 +319,12 @@ namespace FolderMediaPlayer
 
         private void MediaStopped()
         {
-            this._timer.Stop();
+            try
+            {
+                this._timer?.Stop();
+            }
+            catch
+            { }
         }
 
         private void MediaPlayed()
@@ -495,7 +510,7 @@ namespace FolderMediaPlayer
             }
             else
             {
-                this.mediaSource = argFilePath;
+                SetMedia(argFilePath);
             }
         }
 

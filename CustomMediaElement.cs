@@ -132,6 +132,20 @@ namespace FolderMediaPlayer
                 Debug.WriteLine("Natural video size : {0}, {1}", this.NaturalVideoWidth, this.NaturalVideoHeight);
                 this.MediaSize = new Size((double)this.NaturalVideoWidth, (double)this.NaturalVideoHeight);
                 this.AspectRatio = (double)this.NaturalVideoWidth / (double)this.NaturalVideoHeight;
+                Debug.WriteLine("Video Player Mode");
+                this.ScrubbingEnabled = true;
+
+                /*var expression = GetBindingExpression(ScrubbingEnabledProperty);
+                expression.Target.SetValue(ScrubbingEnabledProperty, true);
+                expression.UpdateSource();*/
+            }
+            else if (false == this.HasVideo)
+            {
+                Debug.WriteLine("Audio Player Mode");
+                this.ScrubbingEnabled = false;
+                /*var expression = GetBindingExpression(ScrubbingEnabledProperty);
+                expression.Target.SetValue(ScrubbingEnabledProperty, false);
+                expression.UpdateSource();*/
             }
         }
 
@@ -147,7 +161,7 @@ namespace FolderMediaPlayer
 
             if (false == this.IsPlaying || (p == this.Position && true == this.IsPlaying))
             {
-                SetValue(IsPlayingProperty, false);
+                this.IsPlaying = false;
                 this.IsMediaFailed = true;
             }
         }
@@ -156,7 +170,7 @@ namespace FolderMediaPlayer
         {
             Debug.WriteLine("MediaElement_MediaEnded Event");
             //Close();
-            SetValue(IsPlayingProperty, false);
+            this.IsPlaying = false;
             this.IsMediaEnded = true;
         }
 

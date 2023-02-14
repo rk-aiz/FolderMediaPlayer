@@ -108,9 +108,11 @@
         </Grid.Resources>
         
         <local:CustomMediaElement
-            ScrubbingEnabled="True"
+            
             LoadedBehavior="Manual"
             UnloadedBehavior="Manual"
+            
+            ScrubbingEnabled="{Binding Scrubbable}"
             MediaSize="{Binding mediaSize, Mode=TwoWay,
                 UpdateSourceTrigger=PropertyChanged}"
             IsPlaying="{Binding playing, Mode=TwoWay,

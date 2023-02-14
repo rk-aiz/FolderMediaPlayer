@@ -332,6 +332,7 @@ namespace FolderMediaPlayer
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            mediaHelper.playing = false;
             if (this.WindowState == WindowState.Maximized)
             {
                 this.settings.lastWindowWidth = this.RestoreBounds.Width;
@@ -347,7 +348,7 @@ namespace FolderMediaPlayer
                 this.settings.lastWindowTop = this.Top;
             }
             this.settings.Save();
-            mediaHelper.playing = false;
+            
 
             base.OnClosing(e);
         }

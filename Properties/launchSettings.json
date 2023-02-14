@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FolderMediaPlayer": {
+      "commandName": "Project",
+      "commandLineArgs": "\"\\\\DS920P\\Music\\洋楽\\Dreamscape.mp3\""
+    }
+  }
+}
