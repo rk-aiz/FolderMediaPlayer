@@ -26,6 +26,7 @@
         <local:PercentageConverter x:Key="PercentageConverter"/>
         <local:PlaybackTimeConverter x:Key="PlaybackTimeConverter"/>
         <local:DoubleToStringConverter x:Key="DoubleToStringConverter"/>
+        <local:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter"/>
 
         <Storyboard x:Key="CursorAnimation">
             <BooleanAnimationUsingKeyFrames
@@ -53,6 +54,7 @@
             <Storyboard x:Key="LabelOpacityAnimation">
                 <DoubleAnimationUsingKeyFrames
                                     Duration="0:0:2.4"
+                                    FillBehavior="Stop"
                                     Storyboard.TargetProperty="(Label.Opacity)">
                     <LinearDoubleKeyFrame KeyTime="0:0:0.05" Value="1" />
                     <LinearDoubleKeyFrame KeyTime="0:0:2.2" Value="1" />
@@ -63,6 +65,7 @@
             <Storyboard x:Key="TitleOpacityAnimation">
                 <DoubleAnimationUsingKeyFrames
                                     Duration="0:0:5"
+                                    FillBehavior="Stop"
                                     Storyboard.TargetProperty="(Label.Opacity)">
                     <LinearDoubleKeyFrame KeyTime="0:0:0.05" Value="1" />
                     <LinearDoubleKeyFrame KeyTime="0:0:4.8" Value="1" />
@@ -72,11 +75,11 @@
 
             <Style x:Key="OSDLabelStyle">
                 <Setter Property="Label.IsTabStop" Value="False"/>
-                <Setter Property="Label.Margin" Value="15, 10"/>
+                <Setter Property="Label.Margin" Value="15, 25"/>
                 <Setter Property="Label.Width" Value="Auto"/>
                 <Setter Property="Label.Height" Value="Auto"/>
                 <Setter Property="Label.FontFamily" Value="Consolas"/>
-                <Setter Property="Label.FontSize" Value="40"/>
+                <Setter Property="Label.FontSize" Value="30"/>
                 <Setter Property="Label.FontWeight" Value="Heavy"/>
                 <Setter Property="Label.Opacity" Value="0"/>
                 <Setter Property="Label.Foreground"
@@ -90,29 +93,27 @@
                     </Setter.Value>
                 </Setter>
                 <Style.Triggers>
-                    <EventTrigger RoutedEvent="local:OnScreenVolumeLabel.ContentChanged">
+                    <EventTrigger RoutedEvent="local:CustomLabel.ContentChanged">
                         <BeginStoryboard Storyboard="{StaticResource LabelOpacityAnimation}" />
                     </EventTrigger>
                     <EventTrigger RoutedEvent="local:OnScreenTitleLabel.ContentChanged">
                         <BeginStoryboard Storyboard="{StaticResource TitleOpacityAnimation}" />
                     </EventTrigger>
-                    <EventTrigger RoutedEvent="local:OnScreenSpeedLabel.ContentChanged">
-                        <BeginStoryboard Storyboard="{StaticResource LabelOpacityAnimation}" />
-                    </EventTrigger>
-                    <EventTrigger RoutedEvent="local:OnScreenPlaybackTimeLabel.ContentChanged">
-                        <BeginStoryboard Storyboard="{StaticResource LabelOpacityAnimation}" />
-                    </EventTrigger>
+                    <Trigger Property="local:CustomLabel.StaysOpen" Value="True">
+                        <Setter Property="Label.Opacity" Value="1"/>
+                    </Trigger>
                 </Style.Triggers>
             </Style>
 
         </Grid.Resources>
-        
+
         <local:CustomMediaElement
             
             LoadedBehavior="Manual"
             UnloadedBehavior="Manual"
             
-            ScrubbingEnabled="{Binding Scrubbable}"
+            ScrubbingEnabled="{Binding Scrubbable, Mode=TwoWay,
+                UpdateSourceTrigger=PropertyChanged}"
             MediaSize="{Binding mediaSize, Mode=TwoWay,
                 UpdateSourceTrigger=PropertyChanged}"
             IsPlaying="{Binding playing, Mode=TwoWay,
@@ -125,6 +126,8 @@
             Volume="{Binding mediaVolume}"
             AspectRatio="{Binding mediaAspectRatio, Mode=TwoWay,
                 UpdateSourceTrigger=PropertyChanged}"
+            AudioPlayerMode="{Binding AudioPlayer, Mode=TwoWay,
+                UpdateSourceTrigger=PropertyChanged}"
             IsHitTestVisible="False"
         />
         <local:OnScreenVolumeLabel
@@ -133,6 +136,7 @@
             VisibilityDefault="False"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
+            StaysOpen="{Binding AudioPlayer, Mode=OneWay}"
             Content="{Binding mediaVolume,
                 Mode=OneWay,
                 Converter={StaticResource PercentageConverter}}"
@@ -144,15 +148,16 @@
             Margin="100, 10, 15, 0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
+            StaysOpen="{Binding AudioPlayer, Mode=OneWay}"
             Content="{Binding mediaTitle, Mode=OneWay}"
             />
         <local:OnScreenSpeedLabel
             Style="{StaticResource OSDLabelStyle}"
             VisibilitySetting="OnScreenSpeedDisplay"
             VisibilityDefault="False"
-            Margin="15, 10"
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
+            StaysOpen="{Binding AudioPlayer, Mode=OneWay}"
             Content="{Binding mediaSpeed, Mode=OneWay,
                 Converter={StaticResource DoubleToStringConverter},
                 ConverterParameter={}x{0:f1}}"
@@ -163,7 +168,8 @@
             VisibilityDefault="False"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Time="{Binding mediaPlaybackTime}"
+            StaysOpen="{Binding AudioPlayer, Mode=OneWay}"
+            Time="{Binding mediaPlaybackTime, Mode=OneWay}"
             >
             <local:OnScreenPlaybackTimeLabel.Content>
                 <MultiBinding Converter="{StaticResource PlaybackTimeConverter}"
@@ -189,5 +195,16 @@
                 </ControlTemplate>
             </Thumb.Template>
         </Thumb>
+
+        <local:MediaSlider
+            Orientation="Horizontal"
+            TickFrequency="1.0"
+            Margin="10, 10"
+            IsSnapToTickEnabled="True"
+            MediaDuration="{Binding mediaDuration, Mode=OneWay}"
+            MediaPlaybackTime="{Binding mediaPlaybackTime, Mode=OneWay}"
+            VerticalAlignment="Bottom"
+            MediaSliderJumped="MediaSlider_ValueChanged"
+            />
     </Grid>
 </Window>

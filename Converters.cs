@@ -164,6 +164,26 @@ namespace FolderMediaPlayer
         }
     }
 
+    [ValueConversion(typeof(TimeSpan), typeof(double))]
+    public class TimeSpanToDoubleConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null)
+                return Binding.DoNothing;
+
+            return ((TimeSpan)value).TotalSeconds;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || (double)value == double.NaN)
+                return Binding.DoNothing;
+
+            return TimeSpan.FromSeconds((double)value);
+        }
+    }
+
     [ValueConversion(typeof(Enum), typeof(String))]
     public class EnumToStringConverter : IValueConverter
     {
@@ -302,4 +322,6 @@ namespace FolderMediaPlayer
                 attributes[0].Description : value.ToString();
         }
     }
+
+
 }

@@ -56,6 +56,16 @@ namespace FolderMediaPlayer
             DependencyProperty.Register("IsMediaFailed", typeof(bool), typeof(MediaElement),
                                         new PropertyMetadata(false));
 
+        public bool AudioPlayerMode
+        {
+            get { return (bool)GetValue(AudioPlayerModeProperty); }
+            set { SetValue(AudioPlayerModeProperty, value); }
+        }
+
+        public static readonly DependencyProperty AudioPlayerModeProperty =
+            DependencyProperty.Register("AudioPlayerMode", typeof(bool), typeof(MediaElement),
+                                        new PropertyMetadata(false));
+
         public bool IsPlaying
         {
             get { return (bool)GetValue(IsPlayingProperty); }
@@ -134,7 +144,7 @@ namespace FolderMediaPlayer
                 this.AspectRatio = (double)this.NaturalVideoWidth / (double)this.NaturalVideoHeight;
                 Debug.WriteLine("Video Player Mode");
                 this.ScrubbingEnabled = true;
-
+                this.AudioPlayerMode = false;
                 /*var expression = GetBindingExpression(ScrubbingEnabledProperty);
                 expression.Target.SetValue(ScrubbingEnabledProperty, true);
                 expression.UpdateSource();*/
@@ -143,6 +153,7 @@ namespace FolderMediaPlayer
             {
                 Debug.WriteLine("Audio Player Mode");
                 this.ScrubbingEnabled = false;
+                this.AudioPlayerMode = true;
                 /*var expression = GetBindingExpression(ScrubbingEnabledProperty);
                 expression.Target.SetValue(ScrubbingEnabledProperty, false);
                 expression.UpdateSource();*/

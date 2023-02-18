@@ -155,12 +155,12 @@ namespace FolderMediaPlayer
         private DateTime lastSeekTime;
         private TimeSpan seekInterval = new TimeSpan(0, 0, 0, 0, 300);
 
-        public void Seek(TimeSpan offset, bool absolute = false)
+        public void Seek(TimeSpan offset, bool absolute = false, bool force = false)
         {
             if (this.mediaClock == null)
                 return;
 
-            if (DateTime.UtcNow - this.lastSeekTime < seekInterval)
+            if (false == force && DateTime.UtcNow - this.lastSeekTime < seekInterval)
             {
                 Debug.WriteLine("Seek interval");
                 return;
@@ -193,6 +193,24 @@ namespace FolderMediaPlayer
             }
         }
 
+
+        private RequestSeek reqSeek = new RequestSeek();
+
+        public void SeekRequest(double time)
+        {
+            if (this.mediaClock == null)
+                return;
+
+            TimeSpan targetTime = TimeSpan.FromSeconds(time);
+
+            if (targetTime < TimeSpan.Zero)
+                targetTime = TimeSpan.Zero;
+
+            Debug.WriteLine("Seek Request : {0}", targetTime);
+            reqSeek.Request(targetTime);
+            this.ignoreTickCount = 5;
+        }
+
         private void OnMediaSourceChanged()
         {
             this.Scrubbable = false;
@@ -217,15 +235,19 @@ namespace FolderMediaPlayer
             set { this._mediaTitle = value; NotifyPropertyChanged(); }
         }
 
+
+        private TimeSpan _mediaDuration = TimeSpan.Zero;
         public TimeSpan mediaDuration
         {
-            get { return this.mediaClock.NaturalDuration.HasTimeSpan ?
-                    this.mediaClock.NaturalDuration.TimeSpan : TimeSpan.Zero; }
+            get { return this._mediaDuration; }
+            set { this._mediaDuration = value; NotifyPropertyChanged(); }
         }
 
-        public TimeSpan mediaPlaybackTime
+        private TimeSpan? _mediaPlaybackTime = TimeSpan.Zero;
+        public TimeSpan? mediaPlaybackTime
         {
-            get { return (this.mediaClock.CurrentTime ?? TimeSpan.Zero); }
+            get { return this._mediaPlaybackTime; }
+            set { this._mediaPlaybackTime = value; NotifyPropertyChanged(); }
         }
 
         private bool _scrubbable = false;
@@ -235,20 +257,52 @@ namespace FolderMediaPlayer
             set { this._scrubbable = value; NotifyPropertyChanged(); }
         }
 
-        private void PlaybackTimerMethod(object sender, EventArgs e)
+        public bool _audioPlayer = false;
+        public bool AudioPlayer
         {
-            Debug.WriteLine("Now Playing {0} : {1}", this.mediaSource, this.mediaPlaybackTime);
+            get { return this._audioPlayer; }
+            set
+            {
+                this._audioPlayer = value;
 
-            NotifyPropertyChanged("mediaPlaybackTime");
-            NotifyPropertyChanged("mediaDuration");
+                if (value)
+                {
+                    Debug.WriteLine("AudioPlayer Mode");
+                    this.mediaWidth = 1000.0;
+                    this.mediaAspectRatio = 5.0;
+                    this.mediaHeight = 200.0;
+                    //this._timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+                }
+
+                NotifyPropertyChanged();
+            }
         }
 
+        private void PlaybackTimerMethod(object sender, EventArgs e)
+        {
+            //Debug.WriteLine("Now Playing {0} : {1}", this.mediaSource, this.mediaPlaybackTime);
+
+            if (0 < this.ignoreTickCount)
+            {
+                this.ignoreTickCount -= 1;
+            }
+            else
+            {
+                this.mediaPlaybackTime = this.mediaClock.CurrentTime;
+
+                if (this.mediaClock.NaturalDuration.HasTimeSpan)
+                    this.mediaDuration = this.mediaClock.NaturalDuration.TimeSpan;
+                //NotifyPropertyChanged("mediaDuration");
+            }
+        }
+
+        private int ignoreTickCount = 0;
         private DispatcherTimer _timer;
 
         private void SetupTimer()
         {
-            _timer = new DispatcherTimer();
-            _timer.Interval = new TimeSpan(0, 0, 1);
+            _timer = new DispatcherTimer(DispatcherPriority.Send);
+            _timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             _timer.Tick += new EventHandler(PlaybackTimerMethod);
             _timer.Start();
         }
@@ -368,12 +422,13 @@ namespace FolderMediaPlayer
                     return;
 
                 this.aspectRatio = value;
+
                 NotifyPropertyChanged();
 
                 if (Settings.ReadBoolSetting("FixAspectRatio", true))
                 {
-                    this._mediaWidth = this._mediaHeight * value;
-                    NotifyPropertyChanged("mediaWidth");
+                    this._mediaHeight = this._mediaWidth / value;
+                    NotifyPropertyChanged("mediaHeight");
                     this.MediaSizeChanged.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -427,8 +482,8 @@ namespace FolderMediaPlayer
         public double changeVolumeStep = 0.05;
         public double changeSpeedStep = 0.1;
 
-        public double mediaMinWidth { get; set; }
-        public double mediaMinHeight { get; set; }
+        public double mediaMinWidth { get; set; } = 1.0;
+        public double mediaMinHeight { get; set; } = 1.0;
 
         private double _mediaVolume = Settings.ReadDoubleSetting("LastVolume");
         public double mediaVolume
@@ -512,6 +567,11 @@ namespace FolderMediaPlayer
             {
                 SetMedia(argFilePath);
             }
+
+            this.reqSeek.SeekProc += (sender, e) =>
+            {
+                this.Seek(e.TargetTime, true, true);
+            };
         }
 
         public void SetMedia(string path)

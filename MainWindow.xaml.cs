@@ -36,7 +36,11 @@ namespace FolderMediaPlayer
     {
         private WindowChrome windowChrome;
 
-        private MediaHelper mediaHelper = new MediaHelper { mediaMinWidth = 292.0 * 16.0 / 9.0, mediaMinHeight = 292.0 };
+        private MediaHelper mediaHelper = new MediaHelper
+        {
+            mediaMinWidth = 100.0,
+            mediaMinHeight = 100.0
+        };
         
         private Settings settings = new Settings();
 
@@ -74,16 +78,6 @@ namespace FolderMediaPlayer
 
         public MainWindow()
         {
-            InitializeComponent();
-            this.DataContext = mediaHelper;
-            this.windowChrome = WindowChrome.GetWindowChrome(this);
-
-            SetBinding(CursorModeProperty, new Binding("MouseCursor")
-            {
-                Source = this.settings,
-                Mode = BindingMode.OneWay,
-            });
-
             this.mediaHelper.MediaSizeChanged += (sender, e) =>
             {
                 this.Width = this.mediaHelper.mediaWidth;
@@ -94,6 +88,16 @@ namespace FolderMediaPlayer
             {
                 this.settings.LastVolume = this.mediaHelper.mediaVolume;
             };
+
+            InitializeComponent();
+            this.DataContext = mediaHelper;
+            this.windowChrome = WindowChrome.GetWindowChrome(this);
+
+            SetBinding(CursorModeProperty, new Binding("MouseCursor")
+            {
+                Source = this.settings,
+                Mode = BindingMode.OneWay,
+            });
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -171,6 +175,13 @@ namespace FolderMediaPlayer
                 hbmpItem = IntPtr.Zero
             };
             InsertMenuItem(hSysMenu, 0, true, ref miOpenDiag);
+        }
+
+        private void MediaSlider_ValueChanged(object sender, EventArgs e)
+        {
+            Debug.WriteLine("MediaSlider_ValueChanged : {0}", ((MediaSlider)sender).Value);
+            this.mediaHelper.SeekRequest((double)((MediaSlider)sender).Value);
+            //this.mediaHelper.Seek();
         }
 
         private static void CursorMode_PropertyChanged(DependencyObject d,
@@ -593,6 +604,8 @@ namespace FolderMediaPlayer
 
     private const int MIIM_ID_OPTION = 0x0001;
     private const int MIIM_ID_OPENDIALOG = 0x0002;
+
+
     }
 }
 

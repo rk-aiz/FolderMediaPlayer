@@ -8,52 +8,70 @@ using System.Windows.Media.Animation;
 
 namespace FolderMediaPlayer
 {
-    public class OnScreenVolumeLabel : Label
+
+    public class CustomLabel : Label
     {
+        public bool StaysOpen
+        {
+            get { return (bool)GetValue(StaysOpenProperty); }
+            set { SetValue(StaysOpenProperty, value); }
+        }
+
+        public static readonly DependencyProperty StaysOpenProperty =
+            DependencyProperty.Register("StaysOpen", typeof(bool), typeof(Label),
+                                        new PropertyMetadata(false, new PropertyChangedCallback(StaysOpen_PropertyChanged)));
+
         public static readonly RoutedEvent ContentChangedEvent =
             EventManager.RegisterRoutedEvent(
                 name: "ContentChanged",
                 routingStrategy: RoutingStrategy.Bubble,
                 handlerType: typeof(RoutedEventHandler),
-                ownerType: typeof(OnScreenVolumeLabel));
+                ownerType: typeof(CustomLabel));
 
         public string VisibilitySetting { get; set; }
         public bool VisibilityDefault { get; set; }
+
+        protected static void StaysOpen_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            CustomLabel source = (CustomLabel)d;
+            //var sb = (Storyboard)source.FindResource("LabelOpacityAnimation");
+            if ((bool)e.NewValue)
+            {
+                Debug.WriteLine("StaysOpen True");
+                //sb.Pause(source);
+                source.Opacity = 1.0;
+            }
+            else
+            {
+                Debug.WriteLine("StaysOpen False");
+                //sb.Resume(source);
+                source.Opacity = 0.0;
+            }
+        }
 
         public event RoutedEventHandler ContentChanged
         {
             add { AddHandler(ContentChangedEvent, value); }
             remove { RemoveHandler(ContentChangedEvent, value); }
         }
+    }
+
+    public class OnScreenVolumeLabel : CustomLabel
+    {
 
         protected override void OnContentChanged(object oldContent, object newContent)
         {
-            if (Settings.ReadBoolSetting(this.VisibilitySetting, this.VisibilityDefault))
-            {   
+            if (Settings.ReadBoolSetting(
+                this.VisibilitySetting, this.VisibilityDefault))
+            {
                 RaiseEvent(new RoutedEventArgs(ContentChangedEvent, this));
             }
             base.OnContentChanged(oldContent, newContent);
         }
     }
 
-    public class OnScreenSpeedLabel : Label
+    public class OnScreenSpeedLabel : CustomLabel
     {
-        public static readonly RoutedEvent ContentChangedEvent =
-            EventManager.RegisterRoutedEvent(
-                name: "ContentChanged",
-                routingStrategy: RoutingStrategy.Bubble,
-                handlerType: typeof(RoutedEventHandler),
-                ownerType: typeof(OnScreenSpeedLabel));
-
-        public string VisibilitySetting { get; set; }
-        public bool VisibilityDefault { get; set; }
-
-        public event RoutedEventHandler ContentChanged
-        {
-            add { AddHandler(ContentChangedEvent, value); }
-            remove { RemoveHandler(ContentChangedEvent, value); }
-        }
-
         protected override void OnContentChanged(object oldContent, object newContent)
         {
             if (Settings.ReadBoolSetting(this.VisibilitySetting, this.VisibilityDefault))
@@ -64,27 +82,48 @@ namespace FolderMediaPlayer
         }
     }
 
-    public class OnScreenTitleLabel : Label
+    public class OnScreenTitleLabel : CustomLabel
     {
-        public static readonly RoutedEvent ContentChangedEvent =
+        new public static readonly RoutedEvent ContentChangedEvent =
             EventManager.RegisterRoutedEvent(
                 name: "ContentChanged",
                 routingStrategy: RoutingStrategy.Bubble,
                 handlerType: typeof(RoutedEventHandler),
                 ownerType: typeof(OnScreenTitleLabel));
 
-        public string VisibilitySetting { get; set; }
-        public bool VisibilityDefault { get; set; }
-
-        public event RoutedEventHandler ContentChanged
+        new public bool StaysOpen
         {
-            add { AddHandler(ContentChangedEvent, value); }
-            remove { RemoveHandler(ContentChangedEvent, value); }
+            get { return (bool)GetValue(StaysOpenProperty); }
+            set { SetValue(StaysOpenProperty, value); }
+        }
+
+        new public static readonly DependencyProperty StaysOpenProperty =
+            DependencyProperty.Register("StaysOpen", typeof(bool), typeof(OnScreenTitleLabel),
+                new PropertyMetadata(false, new PropertyChangedCallback(StaysOpen_PropertyChanged)));
+
+        new protected static void StaysOpen_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            CustomLabel source = (CustomLabel)d;
+            var sb = (Storyboard)source.FindResource("TitleOpacityAnimation");
+            if ((bool)e.NewValue)
+            {
+                Debug.WriteLine("TitleOpacityAnimation Pause");
+                sb.Stop(source);
+                source.Opacity = 1.0;
+            }
+            else
+            {
+                Debug.WriteLine("TitleOpacityAnimation Resume");
+                sb.Begin(source);
+                source.Opacity = 0.0;
+            }
         }
 
         protected override void OnContentChanged(object oldContent, object newContent)
         {
-            if (Settings.ReadBoolSetting(this.VisibilitySetting, this.VisibilityDefault))
+            if (false == this.StaysOpen &&
+                Settings.ReadBoolSetting(
+                    this.VisibilitySetting, this.VisibilityDefault))
             {
                 RaiseEvent(new RoutedEventArgs(ContentChangedEvent, this));
             }
@@ -92,7 +131,7 @@ namespace FolderMediaPlayer
         }
     }
 
-    public class OnScreenPlaybackTimeLabel : Label
+    public class OnScreenPlaybackTimeLabel : CustomLabel
     {
         public TimeSpan Time
         {
@@ -104,22 +143,7 @@ namespace FolderMediaPlayer
         DependencyProperty.Register("Time", typeof(TimeSpan), typeof(Label),
                                 new PropertyMetadata(TimeSpan.Zero, new PropertyChangedCallback(OnTimeChanged)));
 
-        public static readonly RoutedEvent ContentChangedEvent = EventManager.RegisterRoutedEvent(
-            name: "ContentChanged",
-            routingStrategy: RoutingStrategy.Bubble,
-            handlerType: typeof(RoutedEventHandler),
-            ownerType: typeof(OnScreenPlaybackTimeLabel));
-
-        public string VisibilitySetting { get; set; }
-        public bool VisibilityDefault { get; set; }
-
         public TimeSpan tThreathold = new TimeSpan(0, 0, 0, 2, 950);
-
-        public event RoutedEventHandler ContentChanged
-        {
-            add { AddHandler(ContentChangedEvent, value); }
-            remove { RemoveHandler(ContentChangedEvent, value); }
-        }
 
         protected override void OnContentChanged(object oldContent, object newContent)
         {
@@ -138,10 +162,8 @@ namespace FolderMediaPlayer
         {
             OnScreenPlaybackTimeLabel source = (OnScreenPlaybackTimeLabel)d;
 
-            if (Settings.ReadBoolSetting(source.VisibilitySetting, source.VisibilityDefault))
+            if (source.StaysOpen || Settings.ReadBoolSetting(source.VisibilitySetting, source.VisibilityDefault))
             {
-                //Debug.WriteLine("Time changed : {0}", ((TimeSpan)e.NewValue - (TimeSpan)e.OldValue).TotalSeconds);
-                //Debug.WriteLine("Time changed : {0}", ((TimeSpan)e.NewValue - (TimeSpan)e.OldValue).Duration() > source.tThreathold);
                 if (((TimeSpan)e.NewValue - (TimeSpan)e.OldValue).Duration() > source.tThreathold)
                 {
                     source.RaiseEvent(new RoutedEventArgs(ContentChangedEvent, source));
