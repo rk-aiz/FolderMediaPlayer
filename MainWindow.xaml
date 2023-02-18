@@ -12,6 +12,7 @@
         SnapsToDevicePixels="True"
         AllowDrop="True"
         MouseWheel="MainWindow_MouseWheel"
+        local:CustomMediaElement.MediaSourceChanged="MediaSourceChanged"
         Drop="Window_Drop"
         >
     <WindowChrome.WindowChrome>
@@ -197,6 +198,7 @@
         </Thumb>
 
         <local:MediaSlider
+            x:Name="MediaSlider"
             Orientation="Horizontal"
             TickFrequency="1.0"
             Margin="10, 10"
@@ -205,6 +207,7 @@
             MediaPlaybackTime="{Binding mediaPlaybackTime, Mode=OneWay}"
             VerticalAlignment="Bottom"
             MediaSliderJumped="MediaSlider_ValueChanged"
+            Background="Transparent"
             />
     </Grid>
 </Window>

@@ -96,6 +96,29 @@ namespace FolderMediaPlayer
             DependencyProperty.Register("MediaController", typeof(ClockController), typeof(MediaElement),
                                         new PropertyMetadata(null, new PropertyChangedCallback(ClockController_PropertyChanged)));
 
+
+        // Register a custom routed event using the Bubble routing strategy.
+        public static readonly RoutedEvent MediaSourceChangedEvent = EventManager.RegisterRoutedEvent(
+            name: "MediaSourceChanged",
+            routingStrategy: RoutingStrategy.Bubble,
+            handlerType: typeof(RoutedEventHandler),
+            ownerType: typeof(CustomMediaElement));
+
+        // Provide CLR accessors for assigning an event handler.
+        public event RoutedEventHandler MediaSourceChanged
+        {
+            add { AddHandler(MediaSourceChangedEvent, value); }
+            remove { RemoveHandler(MediaSourceChangedEvent, value); }
+        }
+
+        void RaiseMediaSourceChangedEvent()
+        {
+            RoutedEventArgs routedEventArgs = new RoutedEventArgs(
+                routedEvent: MediaSourceChangedEvent);
+
+            RaiseEvent(routedEventArgs);
+        }
+
         private static void ClockController_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             MediaElement source = (MediaElement)d;
@@ -158,6 +181,8 @@ namespace FolderMediaPlayer
                 expression.Target.SetValue(ScrubbingEnabledProperty, false);
                 expression.UpdateSource();*/
             }
+
+            RaiseMediaSourceChangedEvent();
         }
 
         public async void MediaElement_MediaFailed(object sender, ExceptionRoutedEventArgs e)

@@ -605,7 +605,19 @@ namespace FolderMediaPlayer
     private const int MIIM_ID_OPTION = 0x0001;
     private const int MIIM_ID_OPENDIALOG = 0x0002;
 
+        private void MediaSourceChanged(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("MediaSlider_MediaSourceChanged");
 
+            if (this.mediaHelper.AudioPlayer)
+            {
+                this.MediaSlider.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.MediaSlider.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }
 
